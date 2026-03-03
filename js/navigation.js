@@ -7,22 +7,50 @@ document.addEventListener('DOMContentLoaded', function () {
     var MOBILE_BREAKPOINT = 1024;
 
     if (menuToggle && mainNav) {
+        var menuClose = document.getElementById('menu-close');
+        var navOverlay = document.getElementById('nav-overlay');
+
+        function openMenu() {
+            menuToggle.classList.add('active');
+            mainNav.classList.add('active');
+            if (navOverlay) navOverlay.classList.add('active');
+            menuToggle.setAttribute('aria-expanded', 'true');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            menuToggle.classList.remove('active');
+            mainNav.classList.remove('active');
+            if (navOverlay) navOverlay.classList.remove('active');
+            menuToggle.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+            // Close all sub-menus
+            var openItems = mainNav.querySelectorAll('.open');
+            for (var i = 0; i < openItems.length; i++) {
+                openItems[i].classList.remove('open');
+            }
+        }
+
         menuToggle.addEventListener('click', function (e) {
             e.stopPropagation();
-            this.classList.toggle('active');
-            mainNav.classList.toggle('active');
-
-            var expanded = this.getAttribute('aria-expanded') === 'true';
-            this.setAttribute('aria-expanded', !expanded);
-
-            // If we are closing the main menu, close all sub-menus too
-            if (expanded) {
-                var openItems = mainNav.querySelectorAll('.open');
-                for (var i = 0; i < openItems.length; i++) {
-                    openItems[i].classList.remove('open');
-                }
+            if (mainNav.classList.contains('active')) {
+                closeMenu();
+            } else {
+                openMenu();
             }
         });
+
+        if (menuClose) {
+            menuClose.addEventListener('click', function () {
+                closeMenu();
+            });
+        }
+
+        if (navOverlay) {
+            navOverlay.addEventListener('click', function () {
+                closeMenu();
+            });
+        }
 
         // Handle mobile sub-menu toggles for ALL items with children
         mainNav.addEventListener('click', function (e) {
