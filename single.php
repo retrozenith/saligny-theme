@@ -80,8 +80,6 @@ get_header();
 endwhile; ?>
 
         </div>
-
-        <?php get_sidebar(); ?>
     </div>
 </main>
 

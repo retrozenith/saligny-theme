@@ -12,6 +12,44 @@ get_header();
     <div class="content-wrap">
         <div class="main-content">
 
+            <!-- MAIN HERO SECTION -->
+            <section class="hero-main">
+                <div class="hero-main__content">
+                    <span class="hero-main__badge">Din 1959</span>
+                    <h1 class="hero-main__title">65 de ani de<br><span>Excelență Tehnică</span></h1>
+                    <p class="hero-main__description">Pregătim generațiile viitorului printr-o educație practică, inovatoare și adaptată cerințelor pieței muncii moderne.</p>
+                    
+                    <div class="hero-main__actions">
+                        <a href="<?php echo esc_url(home_url('/despre-noi/')); ?>" class="btn-primary">Descoperă Colegiul</a>
+                        <a href="<?php echo esc_url(home_url('/contact/')); ?>" class="btn-outline">Admitere & Contact</a>
+                    </div>
+                </div>
+
+                <div class="hero-main__stats">
+                    <div class="stat-card">
+                        <span class="stat-icon"><?php echo saligny_icon('settings'); ?></span>
+                        <div class="stat-info">
+                            <strong>Profil Tehnic - Mecanică</strong>
+                            <span>Mecatronică, Întreținere și Reparații</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon"><?php echo saligny_icon('home'); ?></span>
+                        <div class="stat-info">
+                            <strong>Construcții & Instalații</strong>
+                            <span>Desenatori, Structuri și Finisaje</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon"><?php echo saligny_icon('target'); ?></span>
+                        <div class="stat-info">
+                            <strong>Profil Sportiv</strong>
+                            <span>Instructori Sportivi</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- HERO SLIDER -->
             <div class="hero-slider" id="hero-slider">
                 <?php
@@ -234,9 +272,6 @@ if (empty($noutati_posts) && empty($activitati_posts) && empty($proiecte_posts))
             <?php
 endif; ?>
 
-        </div>
-
-        <?php get_sidebar(); ?>
     </div>
 </main>
 

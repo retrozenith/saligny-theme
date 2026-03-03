@@ -226,8 +226,6 @@ get_header();
             </article>
 
         </div>
-
-        <?php get_sidebar(); ?>
     </div>
 </main>
 
