@@ -14,6 +14,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
             var expanded = this.getAttribute('aria-expanded') === 'true';
             this.setAttribute('aria-expanded', !expanded);
+
+            // If we are closing the main menu, close all sub-menus too
+            if (expanded) {
+                var openItems = mainNav.querySelectorAll('.open');
+                for (var i = 0; i < openItems.length; i++) {
+                    openItems[i].classList.remove('open');
+                }
+            }
         });
 
         // Handle mobile sub-menu toggles for ALL items with children
