@@ -181,18 +181,46 @@ function saligny_post_thumbnail($size = 'saligny-card-thumb')
 }
 
 // ============================================
+// HELPER: SVG Icon system
+// ============================================
+function saligny_icon($name, $size = '1em')
+{
+    $style = 'style="width:' . esc_attr($size) . ';height:' . esc_attr($size) . ';vertical-align:-0.125em;fill:currentColor;flex-shrink:0;"';
+    $icons = array(
+        'megaphone' => '<svg ' . $style . ' viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>',
+        'target' => '<svg ' . $style . ' viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="6" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2"/></svg>',
+        'building' => '<svg ' . $style . ' viewBox="0 0 24 24"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>',
+        'clipboard' => '<svg ' . $style . ' viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>',
+        'newspaper' => '<svg ' . $style . ' viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM8 20H4v-4h4v4zm0-6H4v-4h4v4zm0-6H4V4h4v4zm6 12h-4V4h4v16zm6 0h-4v-4h4v4zm0-6h-4v-4h4v4zm0-6h-4V4h4v4z"/></svg>',
+        'document' => '<svg ' . $style . ' viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>',
+        'calendar' => '<svg ' . $style . ' viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM9 10H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg>',
+        'graduation' => '<svg ' . $style . ' viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>',
+        'school' => '<svg ' . $style . ' viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>',
+        'user' => '<svg ' . $style . ' viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>',
+        'folder' => '<svg ' . $style . ' viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>',
+        'tag' => '<svg ' . $style . ' viewBox="0 0 24 24"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/></svg>',
+        'pin' => '<svg ' . $style . ' viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>',
+        'phone' => '<svg ' . $style . ' viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>',
+        'email' => '<svg ' . $style . ' viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>',
+        'archive' => '<svg ' . $style . ' viewBox="0 0 24 24"><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z"/></svg>',
+    );
+    return isset($icons[$name]) ? $icons[$name] : '';
+}
+
+// ============================================
 // HELPER: Render category icon
 // ============================================
 function saligny_category_icon($slug)
 {
-    $icons = array(
-        'noutati' => '📢',
-        'activitati' => '🎯',
-        'proiecte' => '🏗️',
-        'secretariat' => '📋',
-        'reviste' => '📰',
+    $map = array(
+        'noutati' => 'megaphone',
+        'activitati' => 'target',
+        'proiecte' => 'building',
+        'secretariat' => 'clipboard',
+        'reviste' => 'newspaper',
     );
-    return isset($icons[$slug]) ? $icons[$slug] : '📄';
+    $icon_name = isset($map[$slug]) ? $map[$slug] : 'document';
+    return saligny_icon($icon_name);
 }
 
 // ============================================
@@ -245,7 +273,7 @@ function saligny_theme_activation()
         'Profilul Educational' => 'Colegiul oferă o gamă largă de calificări profesionale în domenii tehnice și vocaționale.',
         'Calificări și Curriculum' => 'Calificările oferite de colegiul nostru sunt recunoscute la nivel european.',
         'Baza Materiala' => 'Colegiul dispune de laboratoare moderne, ateliere echipate și săli de clasă confortabile.',
-        'Contact' => '<h3>📍 Adresa</h3><p>Str. Ing. Zablovschi nr. 4, Sector 3, 031534 București</p><h3>📞 Telefon</h3><p>021 323 8035</p><h3>📧 Email</h3><p>anghel_saligny@yahoo.com</p>',
+        'Contact' => '<h3>Adresa</h3><p>Str. Ing. Zablovschi nr. 4, Sector 3, 031534 București</p><h3>Telefon</h3><p>021 323 8035</p><h3>Email</h3><p>anghel_saligny@yahoo.com</p>',
         'Secretariat ONLINE' => 'Pentru orice informare, va rugam sa va adresati serviciului secretariat in mediul on-line pe mail-ul unitatii: anghel_saligny@yahoo.com',
         'Management' => 'Echipa de conducere a Colegiului Tehnic Anghel Saligny.',
         'Transparenta Institutionala' => 'Informații publice conform Legii nr. 544/2001 privind liberul acces la informațiile de interes public.',
@@ -428,3 +456,15 @@ function saligny_body_classes($classes)
     return $classes;
 }
 add_filter('body_class', 'saligny_body_classes');
+
+// ============================================
+// ENSURE PERMALINKS ARE FLUSHED
+// ============================================
+function saligny_maybe_flush_rewrite_rules()
+{
+    if (get_option('saligny_permalinks_flushed') !== '1.0.0') {
+        flush_rewrite_rules();
+        update_option('saligny_permalinks_flushed', '1.0.0');
+    }
+}
+add_action('init', 'saligny_maybe_flush_rewrite_rules');
