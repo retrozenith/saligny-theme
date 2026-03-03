@@ -468,3 +468,12 @@ function saligny_maybe_flush_rewrite_rules()
     }
 }
 add_action('init', 'saligny_maybe_flush_rewrite_rules');
+
+// ============================================
+// DESIGNER CREDIT
+// ============================================
+add_action('wp_footer', function () {
+    echo '<p class="designer-credit" style="text-align:center; font-size:12px;">
+            Website realizat de <a href="https://github.com/retrozenith" target="_blank" rel="noopener">Cristea Florian Victor</a>
+          </p>';
+});
