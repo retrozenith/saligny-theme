@@ -157,14 +157,14 @@ get_header();
 
             <article class="entry-article">
                 <div class="entry-header">
-                    <h1 class="entry-title">📍 Contact</h1>
+                    <h1 class="entry-title"><?php echo saligny_icon('pin'); ?> Contact</h1>
                 </div>
 
                 <div class="entry-content">
                     <div class="contact-page-grid">
                         <div class="contact-info-section">
                             <div class="contact-card">
-                                <div class="card-icon">🏫</div>
+                                <div class="card-icon"><?php echo saligny_icon('school', '1.8rem'); ?></div>
                                 <div>
                                     <h4>Adresa</h4>
                                     <p>Bulevardul Nicolae Grigorescu nr. 12<br>Sector 3, București</p>
@@ -172,7 +172,7 @@ get_header();
                             </div>
 
                             <div class="contact-card">
-                                <div class="card-icon">📞</div>
+                                <div class="card-icon"><?php echo saligny_icon('phone', '1.8rem'); ?></div>
                                 <div>
                                     <h4>Telefon / Fax</h4>
                                     <p>Tel: <a href="tel:+40213402654">021.340.26.54</a><br>Fax: 021.340.26.54</p>
@@ -180,7 +180,7 @@ get_header();
                             </div>
 
                             <div class="contact-card">
-                                <div class="card-icon">📧</div>
+                                <div class="card-icon"><?php echo saligny_icon('email', '1.8rem'); ?></div>
                                 <div>
                                     <h4>Email</h4>
                                     <p><a href="mailto:anghel_saligny@yahoo.com">anghel_saligny@yahoo.com</a></p>
@@ -188,7 +188,7 @@ get_header();
                             </div>
 
                             <div class="contact-card">
-                                <div class="card-icon">🌐</div>
+                                <div class="card-icon"><?php echo saligny_icon('document', '1.8rem'); ?></div>
                                 <div>
                                     <h4>Website</h4>
                                     <p><a href="https://www.anghel-saligny.info.ro" target="_blank" rel="noopener">www.anghel-saligny.info.ro</a></p>
@@ -196,7 +196,7 @@ get_header();
                             </div>
 
                             <div class="contact-card">
-                                <div class="card-icon">🚌</div>
+                                <div class="card-icon"><?php echo saligny_icon('pin', '1.8rem'); ?></div>
                                 <div>
                                     <h4>Transport în comun</h4>
                                     <p>
@@ -215,7 +215,7 @@ get_header();
                     </div>
 
                     <div class="program-section">
-                        <h3>🕐 Program Secretariat</h3>
+                        <h3><?php echo saligny_icon('calendar'); ?> Program Secretariat</h3>
                         <table class="program-table">
                             <tr><td>Luni – Vineri</td><td>08:00 – 16:00</td></tr>
                             <tr><td>Sâmbătă – Duminică</td><td>Închis</td></tr>

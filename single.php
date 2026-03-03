@@ -19,9 +19,9 @@ get_header();
                     <div class="entry-header">
                         <h1 class="entry-title"><?php the_title(); ?></h1>
                         <div class="entry-meta">
-                            <span>📅 <?php echo get_the_date(); ?></span>
-                            <span>👤 <?php the_author(); ?></span>
-                            <span>📁 <?php the_category(', '); ?></span>
+                            <span><?php echo saligny_icon('calendar'); ?> <?php echo get_the_date(); ?></span>
+                            <span><?php echo saligny_icon('user'); ?> <?php the_author(); ?></span>
+                            <span><?php echo saligny_icon('folder'); ?> <?php the_category(', '); ?></span>
                         </div>
                     </div>
 
@@ -41,7 +41,7 @@ get_header();
     if ($tags_list):
 ?>
                         <div class="entry-footer-meta">
-                            <span>🏷️ Etichete: <?php echo $tags_list; ?></span>
+                            <span><?php echo saligny_icon('tag'); ?> Etichete: <?php echo $tags_list; ?></span>
                         </div>
                     <?php
     endif; ?>

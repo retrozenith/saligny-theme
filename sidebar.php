@@ -15,11 +15,11 @@
             <ul>
                 <?php
 $sidebar_categories = array(
-    'noutati' => array('icon' => '📢', 'name' => 'Noutăți'),
-    'activitati' => array('icon' => '🎯', 'name' => 'Activități'),
-    'secretariat' => array('icon' => '📋', 'name' => 'Secretariat'),
-    'proiecte' => array('icon' => '🏗️', 'name' => 'Proiecte'),
-    'reviste' => array('icon' => '📰', 'name' => 'Reviste'),
+    'noutati' => array('icon' => 'megaphone', 'name' => 'Noutăți'),
+    'activitati' => array('icon' => 'target', 'name' => 'Activități'),
+    'secretariat' => array('icon' => 'clipboard', 'name' => 'Secretariat'),
+    'proiecte' => array('icon' => 'building', 'name' => 'Proiecte'),
+    'reviste' => array('icon' => 'newspaper', 'name' => 'Reviste'),
 );
 
 foreach ($sidebar_categories as $slug => $cat_info):
@@ -29,7 +29,7 @@ foreach ($sidebar_categories as $slug => $cat_info):
 ?>
                     <li class="<?php echo $is_current; ?>">
                         <a href="<?php echo esc_url(get_category_link($cat->term_id)); ?>">
-                            <span class="cat-icon"><?php echo $cat_info['icon']; ?></span>
+                            <span class="cat-icon"><?php echo saligny_icon($cat_info['icon']); ?></span>
                             <?php echo esc_html($cat_info['name']); ?>
                         </a>
                     </li>
@@ -43,9 +43,9 @@ endforeach;
 
     <!-- Secretariat ONLINE Widget -->
     <div class="sidebar-widget secretariat-widget">
-        <h3 class="widget-title">📋 Cereri de Adeverințe ONLINE</h3>
+        <h3 class="widget-title"><?php echo saligny_icon('clipboard'); ?> Cereri de Adeverințe ONLINE</h3>
         <div class="widget-content">
-            <div class="secretariat-icon">📄</div>
+            <div class="secretariat-icon"><?php echo saligny_icon('document', '2rem'); ?></div>
             <p><strong>Secretariat ONLINE</strong></p>
             <p>Pentru orice informare, vă rugăm să vă adresați serviciului secretariat online pe mail-ul unității.</p>
             <?php
@@ -63,7 +63,7 @@ endif; ?>
 
     <!-- Search -->
     <div class="sidebar-widget">
-        <h3 class="widget-title">🔍 Căutare</h3>
+        <h3 class="widget-title"><?php echo saligny_icon('document'); ?> Căutare</h3>
         <div class="widget-content">
             <?php get_search_form(); ?>
         </div>
@@ -77,7 +77,7 @@ endif; ?>
 
     <!-- Archives -->
     <div class="sidebar-widget">
-        <h3 class="widget-title">📅 Arhivă</h3>
+        <h3 class="widget-title"><?php echo saligny_icon('calendar'); ?> Arhivă</h3>
         <div class="widget-content">
             <select onchange="if(this.value) window.location=this.value;">
                 <option value="">Selectează luna</option>
@@ -92,7 +92,7 @@ $tags = get_tags(array('number' => 30, 'orderby' => 'count', 'order' => 'DESC'))
 if (!empty($tags)):
 ?>
     <div class="sidebar-widget">
-        <h3 class="widget-title">🏷️ Etichete</h3>
+        <h3 class="widget-title"><?php echo saligny_icon('tag'); ?> Etichete</h3>
         <div class="widget-content">
             <div class="tagcloud">
                 <?php foreach ($tags as $tag): ?>

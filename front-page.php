@@ -46,7 +46,7 @@ foreach ($slider_posts as $post):
                         <?php
     else: ?>
                             <div style="width:100%;height:100%;background:linear-gradient(135deg, #1a3a5c <?php echo($i * 20); ?>%, #2a5a8c <?php echo 50 + $i * 10; ?>%, #c8a84e 100%);display:flex;align-items:center;justify-content:center;">
-                                <span style="color:white;font-size:3rem;opacity:0.3;">🏫</span>
+                                <span style="color:white;font-size:3rem;opacity:0.3;"><?php echo saligny_icon('school', '3rem'); ?></span>
                             </div>
                         <?php
     endif; ?>
@@ -74,7 +74,7 @@ endfor; ?>
 
             <!-- WELCOME / ABOUT SECTION -->
             <div class="welcome-section fade-in-up">
-                <div class="welcome-icon">🎓</div>
+                <div class="welcome-icon"><?php echo saligny_icon('graduation', '2.5rem'); ?></div>
                 <h2>Te interesează domeniul tehnic?</h2>
                 <p>La Colegiul Tehnic Anghel Saligny - Bucuresti, dispunem de o paletă largă de specializări, laboratoare și ateliere moderne, dar mai ales de profesori bine pregătiți care îți vor marca evoluția profesională.</p>
                 <p>Îți dorești o carieră sportivă și ai nevoie de o îndrumare competentă? La Colegiul Tehnic Anghel Saligny, am fost și vom fi alături de numeroși campioni naționali și internaționali pe drumul lor către victorie.</p>
@@ -88,7 +88,7 @@ if (!empty($noutati_posts)):
 ?>
             <div class="category-block">
                 <div class="category-header category-header--noutati">
-                    <h2>📢 Noutăți</h2>
+                    <h2><?php echo saligny_icon('megaphone'); ?> Noutăți</h2>
                     <?php $noutati_cat = get_category_by_slug('noutati'); ?>
                     <?php if ($noutati_cat): ?>
                         <a href="<?php echo esc_url(get_category_link($noutati_cat->term_id)); ?>" class="view-all">Vezi toate →</a>
@@ -107,7 +107,7 @@ if (!empty($noutati_posts)):
                                     <a href="<?php echo esc_url(get_permalink($post->ID)); ?>"><?php echo esc_html($post->post_title); ?></a>
                                 </h3>
                                 <div class="post-card__meta">
-                                    📅 <?php echo get_the_date('M j, Y', $post->ID); ?>
+                                    <?php echo saligny_icon('calendar'); ?> <?php echo get_the_date('M j, Y', $post->ID); ?>
                                 </div>
                                 <p class="post-card__excerpt"><?php echo wp_trim_words($post->post_content, 25); ?></p>
                             </div>
@@ -127,7 +127,7 @@ if (!empty($activitati_posts)):
 ?>
             <div class="category-block">
                 <div class="category-header category-header--activitati">
-                    <h2>🎯 Activități</h2>
+                    <h2><?php echo saligny_icon('target'); ?> Activități</h2>
                     <?php $activitati_cat = get_category_by_slug('activitati'); ?>
                     <?php if ($activitati_cat): ?>
                         <a href="<?php echo esc_url(get_category_link($activitati_cat->term_id)); ?>" class="view-all">Vezi toate →</a>
@@ -146,7 +146,7 @@ if (!empty($activitati_posts)):
                                     <a href="<?php echo esc_url(get_permalink($post->ID)); ?>"><?php echo esc_html($post->post_title); ?></a>
                                 </h3>
                                 <div class="post-card__meta">
-                                    📅 <?php echo get_the_date('M j, Y', $post->ID); ?>
+                                    <?php echo saligny_icon('calendar'); ?> <?php echo get_the_date('M j, Y', $post->ID); ?>
                                 </div>
                                 <p class="post-card__excerpt"><?php echo wp_trim_words($post->post_content, 25); ?></p>
                             </div>
@@ -166,7 +166,7 @@ if (!empty($proiecte_posts)):
 ?>
             <div class="category-block">
                 <div class="category-header category-header--proiecte">
-                    <h2>🏗️ Proiecte</h2>
+                    <h2><?php echo saligny_icon('building'); ?> Proiecte</h2>
                     <?php $proiecte_cat = get_category_by_slug('proiecte'); ?>
                     <?php if ($proiecte_cat): ?>
                         <a href="<?php echo esc_url(get_category_link($proiecte_cat->term_id)); ?>" class="view-all">Vezi toate →</a>
@@ -185,7 +185,7 @@ if (!empty($proiecte_posts)):
                                     <a href="<?php echo esc_url(get_permalink($post->ID)); ?>"><?php echo esc_html($post->post_title); ?></a>
                                 </h3>
                                 <div class="post-card__meta">
-                                    📅 <?php echo get_the_date('M j, Y', $post->ID); ?>
+                                    <?php echo saligny_icon('calendar'); ?> <?php echo get_the_date('M j, Y', $post->ID); ?>
                                 </div>
                                 <p class="post-card__excerpt"><?php echo wp_trim_words($post->post_content, 25); ?></p>
                             </div>
@@ -204,7 +204,7 @@ if (empty($noutati_posts) && empty($activitati_posts) && empty($proiecte_posts))
 ?>
             <div class="category-block">
                 <div class="category-header category-header--noutati">
-                    <h2>📢 Ultimele Postări</h2>
+                    <h2><?php echo saligny_icon('megaphone'); ?> Ultimele Postări</h2>
                 </div>
                 <div class="category-posts">
                     <?php
@@ -221,7 +221,7 @@ if (empty($noutati_posts) && empty($activitati_posts) && empty($proiecte_posts))
                                     <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
                                 </h3>
                                 <div class="post-card__meta">
-                                    📅 <?php echo get_the_date(); ?>
+                                    <?php echo saligny_icon('calendar'); ?> <?php echo get_the_date(); ?>
                                 </div>
                                 <p class="post-card__excerpt"><?php echo wp_trim_words(get_the_content(), 25); ?></p>
                             </div>

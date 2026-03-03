@@ -44,7 +44,7 @@ printf(
                                     <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
                                 </h2>
                                 <div class="grid-post-card__meta">
-                                    📅 <?php echo get_the_date(); ?>
+                                    <?php echo saligny_icon('calendar'); ?> <?php echo get_the_date(); ?>
                                 </div>
                                 <p class="grid-post-card__excerpt"><?php echo get_the_excerpt(); ?></p>
                             </div>

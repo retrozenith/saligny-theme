@@ -27,9 +27,9 @@ endif; ?>
 else: ?>
                     <h3>Secretariat Online</h3>
                     <p>Pentru orice informare, vă rugăm să vă adresați serviciului secretariat online:</p>
-                    <p><strong>📧 anghel_saligny@yahoo.com</strong></p>
-                    <p style="margin-top: 12px;">📍 Bd. Nicolae Grigorescu nr. 12, Sector 3, București</p>
-                    <p>📞 021.340.26.54</p>
+                    <p><strong><?php echo saligny_icon('email'); ?> anghel_saligny@yahoo.com</strong></p>
+                    <p style="margin-top: 12px;"><?php echo saligny_icon('pin'); ?> Bd. Nicolae Grigorescu nr. 12, Sector 3, București</p>
+                    <p><?php echo saligny_icon('phone'); ?> 021.340.26.54</p>
                 <?php
 endif; ?>
             </div>

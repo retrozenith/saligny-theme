@@ -13,7 +13,7 @@ get_header();
         <div class="main-content" style="text-align: center; padding: 60px 20px;">
 
             <div class="welcome-section" style="max-width: 600px; margin: 0 auto;">
-                <div style="font-size: 5rem; margin-bottom: 20px;">🔍</div>
+                <div style="font-size: 5rem; margin-bottom: 20px;"><?php echo saligny_icon('document', '5rem'); ?></div>
                 <h1 class="entry-title" style="font-size: 3rem; margin-bottom: 16px;">404</h1>
                 <h2 style="font-size: 1.3rem; margin-bottom: 16px; color: var(--color-text-light);">Pagina nu a fost găsită</h2>
                 <p style="margin-bottom: 24px; color: var(--color-text-muted);">Ne pare rău, pagina pe care o căutați nu există sau a fost mutată.</p>
