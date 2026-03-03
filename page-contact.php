@@ -31,9 +31,10 @@ get_header();
         background: var(--color-bg);
         padding: 24px;
         border-radius: var(--radius-md);
-        display: flex;
-        align-items: flex-start;
-        gap: 16px;
+        display: grid;
+        grid-template-columns: 50px 1fr;
+        align-items: center;
+        gap: 18px;
         transition: all var(--transition-fast);
         border-left: 3px solid transparent;
     }
@@ -49,9 +50,8 @@ get_header();
         flex-shrink: 0;
         width: 50px;
         height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        line-height: 50px;
+        text-align: center;
         background: var(--color-white);
         border-radius: var(--radius-sm);
         box-shadow: 0 2px 8px var(--color-shadow);
@@ -60,6 +60,7 @@ get_header();
     .contact-card h4 {
         font-size: 0.95rem;
         color: var(--color-primary);
+        margin-top: 0;
         margin-bottom: 4px;
     }
 
