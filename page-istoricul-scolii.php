@@ -21,9 +21,19 @@ get_header();
                     <h2 class="section-title"><?php echo esc_html(get_theme_mod('history_timeline_title', '📘 Istoric')); ?></h2>
                     <div class="timeline">
                         <?php
+$default_timeline = array(
+    1 => array('year' => '1966', 'text' => 'La 1 septembrie se înființa „Liceul Industrial de Construcții", funcționând inițial cu trei săli de clasă și un laborator de fizică...'),
+    2 => array('year' => '1976', 'text' => 'De la 1 septembrie, școala și-a schimbat denumirea în „Liceul de Construcții nr. 1".'),
+    3 => array('year' => '1991', 'text' => 'Începând cu 1 septembrie, instituția a devenit „Grupul Școlar Industrial de Construcții Montaj nr. 1"...'),
+    4 => array('year' => '1994', 'text' => 'Grupul Școlar de Construcții „Anghel Saligny" a fost selectat ca școală de demonstrație în cadrul programului Phare-VET...'),
+    5 => array('year' => '2009', 'text' => 'La 1 septembrie, instituția a primit numele de Colegiul Tehnic „Anghel Saligny", sub care funcționează și astăzi.'),
+    6 => array('year' => '', 'text' => ''),
+    7 => array('year' => '', 'text' => ''),
+    8 => array('year' => '', 'text' => ''),
+);
 for ($i = 1; $i <= 8; $i++):
-    $year = get_theme_mod('history_timeline_year_' . $i);
-    $text = get_theme_mod('history_timeline_text_' . $i);
+    $year = get_theme_mod('history_timeline_year_' . $i, $default_timeline[$i]['year']);
+    $text = get_theme_mod('history_timeline_text_' . $i, $default_timeline[$i]['text']);
     if (!empty($year) && !empty($text)):
 ?>
                                 <div class="timeline-item">
