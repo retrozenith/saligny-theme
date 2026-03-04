@@ -140,5 +140,29 @@ function saligny_frontpage_customizer_register($wp_customize)
         $wp_customize->add_setting('front_cat_slug_' . $i, array('default' => $default_cats[$i]['slug'], 'sanitize_callback' => 'sanitize_text_field'));
         $wp_customize->add_control('front_cat_slug_' . $i, array('label' => sprintf(__('Bloc %d - Slug Categorie (Ex: noutati)', 'saligny-theme'), $i), 'section' => 'saligny_front_cats', 'type' => 'text'));
     }
+    // ==========================================
+    // SECTION 5: BLOG INDEX
+    // ==========================================
+    $wp_customize->add_section('saligny_front_blog', array(
+        'title' => __('Pagina Blog (Index)', 'saligny-theme'),
+        'panel' => 'saligny_frontpage_panel',
+    ));
+
+    $wp_customize->add_setting('blog_index_title', array('default' => 'Ultimele Postări', 'sanitize_callback' => 'sanitize_text_field'));
+    $wp_customize->add_control('blog_index_title', array('label' => __('Titlu Pagina Blog', 'saligny-theme'), 'section' => 'saligny_front_blog', 'type' => 'text'));
+
+    $wp_customize->add_setting('blog_index_desc', array('default' => 'Toate noutățile de la Colegiul Tehnic Anghel Saligny Bucuresti.', 'sanitize_callback' => 'sanitize_textarea_field'));
+    $wp_customize->add_control('blog_index_desc', array('label' => __('Descriere Pagina Blog', 'saligny-theme'), 'section' => 'saligny_front_blog', 'type' => 'textarea'));
+
+    // ==========================================
+    // SECTION 6: INSTITUTION NAME (Share Branding)
+    // ==========================================
+    $wp_customize->add_section('saligny_front_branding', array(
+        'title' => __('Denumire Instituție (Partajare)', 'saligny-theme'),
+        'panel' => 'saligny_frontpage_panel',
+    ));
+
+    $wp_customize->add_setting('institution_formal_name', array('default' => 'Colegiul Tehnic "Anghel Saligny" Bucuresti', 'sanitize_callback' => 'sanitize_text_field'));
+    $wp_customize->add_control('institution_formal_name', array('label' => __('Denumirea completă a instituției', 'saligny-theme'), 'description' => __('Apare la partajare (WhatsApp, Email etc.)', 'saligny-theme'), 'section' => 'saligny_front_branding', 'type' => 'text'));
 }
 add_action('customize_register', 'saligny_frontpage_customizer_register');

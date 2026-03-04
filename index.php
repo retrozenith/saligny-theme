@@ -15,8 +15,8 @@ get_header();
             <?php if (have_posts()): ?>
 
                 <div class="archive-header">
-                    <h1 class="archive-title">Ultimele Postări</h1>
-                    <p class="archive-description">Toate noutățile de la Colegiul Tehnic Anghel Saligny Bucuresti.</p>
+                    <h1 class="archive-title"><?php echo esc_html(get_theme_mod('blog_index_title', 'Ultimele Postări')); ?></h1>
+                    <p class="archive-description"><?php echo esc_html(get_theme_mod('blog_index_desc', 'Toate noutățile de la Colegiul Tehnic Anghel Saligny Bucuresti.')); ?></p>
                 </div>
 
                 <div class="posts-grid">

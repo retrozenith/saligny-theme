@@ -131,5 +131,24 @@ function saligny_footer_customizer_register($wp_customize)
         'section' => 'saligny_footer_bottom',
         'type' => 'text',
     ));
+    // ==========================================
+    // SECTION 4: SIDEBAR SECRETARIAT WIDGET
+    // ==========================================
+    $wp_customize->add_section('saligny_sidebar_secretariat', array(
+        'title' => __('Widget Secretariat (Sidebar)', 'saligny-theme'),
+        'panel' => 'saligny_footer_panel',
+    ));
+
+    $wp_customize->add_setting('sidebar_secretariat_title', array('default' => 'Cereri de Adeverințe ONLINE', 'sanitize_callback' => 'sanitize_text_field'));
+    $wp_customize->add_control('sidebar_secretariat_title', array('label' => __('Titlu Widget', 'saligny-theme'), 'section' => 'saligny_sidebar_secretariat', 'type' => 'text'));
+
+    $wp_customize->add_setting('sidebar_secretariat_heading', array('default' => 'Secretariat ONLINE', 'sanitize_callback' => 'sanitize_text_field'));
+    $wp_customize->add_control('sidebar_secretariat_heading', array('label' => __('Subtitlu Bold', 'saligny-theme'), 'section' => 'saligny_sidebar_secretariat', 'type' => 'text'));
+
+    $wp_customize->add_setting('sidebar_secretariat_desc', array('default' => 'Pentru orice informare, vă rugăm să vă adresați serviciului secretariat online pe mail-ul unității.', 'sanitize_callback' => 'sanitize_textarea_field'));
+    $wp_customize->add_control('sidebar_secretariat_desc', array('label' => __('Descriere', 'saligny-theme'), 'section' => 'saligny_sidebar_secretariat', 'type' => 'textarea'));
+
+    $wp_customize->add_setting('sidebar_secretariat_email', array('default' => 'anghel_saligny@yahoo.com', 'sanitize_callback' => 'sanitize_email'));
+    $wp_customize->add_control('sidebar_secretariat_email', array('label' => __('Email Fallback', 'saligny-theme'), 'section' => 'saligny_sidebar_secretariat', 'type' => 'text'));
 }
 add_action('customize_register', 'saligny_footer_customizer_register');

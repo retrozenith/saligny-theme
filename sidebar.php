@@ -43,11 +43,11 @@ endforeach;
 
     <!-- Secretariat ONLINE Widget -->
     <div class="sidebar-widget secretariat-widget">
-        <h3 class="widget-title"><?php echo saligny_icon('clipboard'); ?> Cereri de Adeverințe ONLINE</h3>
+        <h3 class="widget-title"><?php echo saligny_icon('clipboard'); ?> <?php echo esc_html(get_theme_mod('sidebar_secretariat_title', 'Cereri de Adeverințe ONLINE')); ?></h3>
         <div class="widget-content">
             <div class="secretariat-icon"><?php echo saligny_icon('document', '2rem'); ?></div>
-            <p><strong>Secretariat ONLINE</strong></p>
-            <p>Pentru orice informare, vă rugăm să vă adresați serviciului secretariat online pe mail-ul unității.</p>
+            <p><strong><?php echo esc_html(get_theme_mod('sidebar_secretariat_heading', 'Secretariat ONLINE')); ?></strong></p>
+            <p><?php echo esc_html(get_theme_mod('sidebar_secretariat_desc', 'Pentru orice informare, vă rugăm să vă adresați serviciului secretariat online pe mail-ul unității.')); ?></p>
             <?php
 $secretariat_page = get_page_by_title('Secretariat ONLINE', OBJECT, 'page');
 if ($secretariat_page):
@@ -55,7 +55,7 @@ if ($secretariat_page):
                 <a href="<?php echo esc_url(get_permalink($secretariat_page->ID)); ?>" class="btn-secretariat">Află mai multe</a>
             <?php
 else: ?>
-                <a href="mailto:anghel_saligny@yahoo.com" class="btn-secretariat">Contactează-ne</a>
+                <a href="mailto:<?php echo esc_attr(get_theme_mod('sidebar_secretariat_email', 'anghel_saligny@yahoo.com')); ?>" class="btn-secretariat">Contactează-ne</a>
             <?php
 endif; ?>
         </div>
