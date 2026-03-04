@@ -75,6 +75,7 @@ if (empty($slider_posts)) {
     ));
 }
 
+$i = 0;
 global $post;
 foreach ($slider_posts as $post):
     setup_postdata($post);
