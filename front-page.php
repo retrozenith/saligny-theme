@@ -80,7 +80,7 @@ global $post;
 foreach ($slider_posts as $post):
     setup_postdata($post);
 ?>
-                    <div class="slide <?php echo $i === 0 ? 'active' : ''; ?>">
+                    <a href="<?php the_permalink(); ?>" class="slide <?php echo $i === 0 ? 'active' : ''; ?>" style="display:block;color:inherit;text-decoration:none;">
                         <?php if (has_post_thumbnail($post->ID)): ?>
                             <?php echo get_the_post_thumbnail($post->ID, 'saligny-slider'); ?>
                         <?php
@@ -94,7 +94,7 @@ foreach ($slider_posts as $post):
                             <div class="slide-title"><?php echo esc_html($post->post_title); ?></div>
                             <div class="slide-caption"><?php echo wp_trim_words($post->post_content, 15); ?></div>
                         </div>
-                    </div>
+                    </a>
                 <?php
     $i++;
 endforeach;
