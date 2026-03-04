@@ -75,7 +75,7 @@ if (empty($slider_posts)) {
     ));
 }
 
-$i = 0;
+global $post;
 foreach ($slider_posts as $post):
     setup_postdata($post);
 ?>
@@ -158,20 +158,23 @@ for ($i = 1; $i <= 3; $i++) {
             endif; ?>
                             </div>
                             <div class="category-posts">
-                                <?php foreach ($cat_posts as $post):
-                setup_postdata($post); ?>
+                                <?php
+            global $post;
+            foreach ($cat_posts as $post):
+                setup_postdata($post);
+?>
                                     <article class="post-card">
                                         <div class="post-card__thumb">
                                             <?php saligny_post_thumbnail('saligny-card-thumb'); ?>
                                         </div>
                                         <div class="post-card__content">
                                             <h3 class="post-card__title">
-                                                <a href="<?php echo esc_url(get_permalink($post->ID)); ?>"><?php echo esc_html($post->post_title); ?></a>
+                                                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
                                             </h3>
                                             <div class="post-card__meta">
-                                                <?php echo saligny_icon('calendar'); ?> <?php echo get_the_date('M j, Y', $post->ID); ?>
+                                                <?php echo saligny_icon('calendar'); ?> <?php echo get_the_date('M j, Y'); ?>
                                             </div>
-                                            <p class="post-card__excerpt"><?php echo wp_trim_words($post->post_content, 25); ?></p>
+                                            <p class="post-card__excerpt"><?php echo wp_trim_words(get_the_content(), 25); ?></p>
                                         </div>
                                     </article>
                                 <?php
@@ -196,6 +199,7 @@ if (!$any_posts_found):
                 <div class="category-posts">
                     <?php
     $latest = get_posts(array('posts_per_page' => 5, 'post_status' => 'publish'));
+    global $post;
     foreach ($latest as $post):
         setup_postdata($post);
 ?>
