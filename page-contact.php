@@ -168,7 +168,7 @@ get_header();
                                 <div class="card-icon"><?php echo saligny_icon('school', '1.8rem'); ?></div>
                                 <div>
                                     <h4>Adresa</h4>
-                                    <p>Bulevardul Nicolae Grigorescu nr. 12<br>Sector 3, București</p>
+                                    <p><?php echo wp_kses_post(get_theme_mod('contact_address', 'Bulevardul Nicolae Grigorescu nr. 12<br>Sector 3, București')); ?></p>
                                 </div>
                             </div>
 
@@ -176,7 +176,7 @@ get_header();
                                 <div class="card-icon"><?php echo saligny_icon('phone', '1.8rem'); ?></div>
                                 <div>
                                     <h4>Telefon / Fax</h4>
-                                    <p>Tel: <a href="tel:+40213402654">021.340.26.54</a><br>Fax: 021.340.26.54</p>
+                                    <p><?php echo wp_kses_post(get_theme_mod('contact_phone_text', 'Tel: <a href="tel:+40213402654">021.340.26.54</a><br>Fax: 021.340.26.54')); ?></p>
                                 </div>
                             </div>
 
@@ -184,7 +184,7 @@ get_header();
                                 <div class="card-icon"><?php echo saligny_icon('email', '1.8rem'); ?></div>
                                 <div>
                                     <h4>Email</h4>
-                                    <p><a href="mailto:anghel_saligny@yahoo.com">anghel_saligny@yahoo.com</a></p>
+                                    <p><?php echo wp_kses_post(get_theme_mod('contact_email_text', '<a href="mailto:anghel_saligny@yahoo.com">anghel_saligny@yahoo.com</a>')); ?></p>
                                 </div>
                             </div>
 
@@ -192,7 +192,7 @@ get_header();
                                 <div class="card-icon"><?php echo saligny_icon('document', '1.8rem'); ?></div>
                                 <div>
                                     <h4>Website</h4>
-                                    <p><a href="https://www.anghel-saligny.info.ro" target="_blank" rel="noopener">www.anghel-saligny.info.ro</a></p>
+                                    <p><?php echo wp_kses_post(get_theme_mod('contact_website_text', '<a href="https://www.anghel-saligny.info.ro" target="_blank" rel="noopener">www.anghel-saligny.info.ro</a>')); ?></p>
                                 </div>
                             </div>
 
@@ -200,12 +200,10 @@ get_header();
                                 <div class="card-icon"><?php echo saligny_icon('pin', '1.8rem'); ?></div>
                                 <div>
                                     <h4>Transport în comun</h4>
-                                    <p>
-                                        <strong>Autobuz:</strong> 101, 102, 253, 330, 335<br>
-                                        <strong>Troleibuz:</strong> 70, 79, 92<br>
-                                        <strong>Tramvai:</strong> 36, 40, 55<br>
-                                        <strong>Metrou:</strong> Stația Titan
-                                    </p>
+                                    <p><?php echo wp_kses_post(get_theme_mod('contact_transport_text', '<strong>Autobuz:</strong> 101, 102, 253, 330, 335<br>
+<strong>Troleibuz:</strong> 70, 79, 92<br>
+<strong>Tramvai:</strong> 36, 40, 55<br>
+<strong>Metrou:</strong> Stația Titan')); ?></p>
                                 </div>
                             </div>
                         </div>
@@ -218,8 +216,8 @@ get_header();
                     <div class="program-section">
                         <h3><?php echo saligny_icon('calendar'); ?> Program Secretariat</h3>
                         <table class="program-table">
-                            <tr><td>Luni – Vineri</td><td>08:00 – 16:00</td></tr>
-                            <tr><td>Sâmbătă – Duminică</td><td>Închis</td></tr>
+                            <tr><td>Luni – Vineri</td><td><?php echo esc_html(get_theme_mod('contact_schedule_weekdays', '08:00 – 16:00')); ?></td></tr>
+                            <tr><td>Sâmbătă – Duminică</td><td><?php echo esc_html(get_theme_mod('contact_schedule_weekend', 'Închis')); ?></td></tr>
                         </table>
                     </div>
                 </div>

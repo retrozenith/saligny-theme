@@ -15,38 +15,39 @@ get_header();
             <!-- MAIN HERO SECTION -->
             <section class="hero-main">
                 <div class="hero-main__content">
-                    <span class="hero-main__badge">Din 1959</span>
-                    <h1 class="hero-main__title">65 de ani de<br><span>Excelență Tehnică</span></h1>
-                    <p class="hero-main__description">Pregătim generațiile viitorului printr-o educație practică, inovatoare și adaptată cerințelor pieței muncii moderne.</p>
+                    <span class="hero-main__badge"><?php echo esc_html(get_theme_mod('front_hero_badge', 'Din 1959')); ?></span>
+                    <h1 class="hero-main__title"><?php echo wp_kses_post(get_theme_mod('front_hero_title', '65 de ani de<br><span>Excelență Tehnică</span>')); ?></h1>
+                    <p class="hero-main__description"><?php echo esc_html(get_theme_mod('front_hero_desc', 'Pregătim generațiile viitorului printr-o educație practică, inovatoare și adaptată cerințelor pieței muncii moderne.')); ?></p>
                     
                     <div class="hero-main__actions">
-                        <a href="<?php echo esc_url(home_url('/despre-noi/')); ?>" class="btn-primary">Descoperă Colegiul</a>
-                        <a href="<?php echo esc_url(home_url('/contact/')); ?>" class="btn-outline">Admitere & Contact</a>
+                        <a href="<?php echo esc_url(get_theme_mod('front_hero_btn1_url', home_url('/despre-noi/'))); ?>" class="btn-primary"><?php echo esc_html(get_theme_mod('front_hero_btn1_text', 'Descoperă Colegiul')); ?></a>
+                        <a href="<?php echo esc_url(get_theme_mod('front_hero_btn2_url', home_url('/contact/'))); ?>" class="btn-outline"><?php echo esc_html(get_theme_mod('front_hero_btn2_text', 'Admitere & Contact')); ?></a>
                     </div>
                 </div>
 
                 <div class="hero-main__stats">
+                    <?php
+for ($i = 1; $i <= 3; $i++):
+    $default_icons = array(1 => 'settings', 2 => 'home', 3 => 'target');
+    $default_titles = array(1 => 'Profil Tehnic - Mecanică', 2 => 'Construcții & Instalații', 3 => 'Profil Sportiv');
+    $default_descs = array(1 => 'Mecatronică, Întreținere și Reparații', 2 => 'Desenatori, Structuri și Finisaje', 3 => 'Instructori Sportivi');
+
+    $icon = get_theme_mod('front_stat_icon_' . $i, $default_icons[$i]);
+    $title = get_theme_mod('front_stat_title_' . $i, $default_titles[$i]);
+    $desc = get_theme_mod('front_stat_desc_' . $i, $default_descs[$i]);
+
+    if ($title):
+?>
                     <div class="stat-card">
-                        <span class="stat-icon"><?php echo saligny_icon('settings'); ?></span>
+                        <span class="stat-icon"><?php echo saligny_icon($icon); ?></span>
                         <div class="stat-info">
-                            <strong>Profil Tehnic - Mecanică</strong>
-                            <span>Mecatronică, Întreținere și Reparații</span>
+                            <strong><?php echo esc_html($title); ?></strong>
+                            <span><?php echo esc_html($desc); ?></span>
                         </div>
                     </div>
-                    <div class="stat-card">
-                        <span class="stat-icon"><?php echo saligny_icon('home'); ?></span>
-                        <div class="stat-info">
-                            <strong>Construcții & Instalații</strong>
-                            <span>Desenatori, Structuri și Finisaje</span>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-icon"><?php echo saligny_icon('target'); ?></span>
-                        <div class="stat-info">
-                            <strong>Profil Sportiv</strong>
-                            <span>Instructori Sportivi</span>
-                        </div>
-                    </div>
+                    <?php
+    endif;
+endfor; ?>
                 </div>
             </section>
 
@@ -112,133 +113,81 @@ endfor; ?>
 
             <!-- WELCOME / ABOUT SECTION -->
             <div class="welcome-section fade-in-up">
-                <div class="welcome-icon"><?php echo saligny_icon('graduation', '2.5rem'); ?></div>
-                <h2>Te interesează domeniul tehnic?</h2>
-                <p>La Colegiul Tehnic Anghel Saligny - Bucuresti, dispunem de o paletă largă de specializări, laboratoare și ateliere moderne, dar mai ales de profesori bine pregătiți care îți vor marca evoluția profesională.</p>
-                <p>Îți dorești o carieră sportivă și ai nevoie de o îndrumare competentă? La Colegiul Tehnic Anghel Saligny, am fost și vom fi alături de numeroși campioni naționali și internaționali pe drumul lor către victorie.</p>
-                <p>Dacă vrei să îmbini utilul cu plăcutul, să-ți faci prieteni din colegii de școală și să te bucuri de experiența unor profesori valoroși într-un mediu modern, atunci noi suntem alegerea ideală.</p>
+                <div class="welcome-icon"><?php echo saligny_icon(get_theme_mod('front_welcome_icon', 'graduation'), '2.5rem'); ?></div>
+                <h2><?php echo esc_html(get_theme_mod('front_welcome_title', 'Te interesează domeniul tehnic?')); ?></h2>
+                <?php
+$welcome_text = get_theme_mod('front_welcome_text');
+if ($welcome_text) {
+    echo wp_kses_post($welcome_text);
+}
+else {
+    echo '<p>La Colegiul Tehnic Anghel Saligny - Bucuresti, dispunem de o paletă largă de specializări, laboratoare și ateliere moderne, dar mai ales de profesori bine pregătiți care îți vor marca evoluția profesională.</p>
+                    <p>Îți dorești o carieră sportivă și ai nevoie de o îndrumare competentă? La Colegiul Tehnic Anghel Saligny, am fost și vom fi alături de numeroși campioni naționali și internaționali pe drumul lor către victorie.</p>
+                    <p>Dacă vrei să îmbini utilul cu plăcutul, să-ți faci prieteni din colegii de școală și să te bucuri de experiența unor profesori valoroși într-un mediu modern, atunci noi suntem alegerea ideală.</p>';
+}
+?>
             </div>
 
-            <!-- NOUTATI SECTION -->
+            <!-- DYNAMIC CATEGORY BLOCKS -->
             <?php
-$noutati_posts = saligny_get_category_posts('noutati', 5);
-if (!empty($noutati_posts)):
-?>
-            <div class="category-block">
-                <div class="category-header category-header--noutati">
-                    <h2><?php echo saligny_icon('megaphone'); ?> Noutăți</h2>
-                    <?php $noutati_cat = get_category_by_slug('noutati'); ?>
-                    <?php if ($noutati_cat): ?>
-                        <a href="<?php echo esc_url(get_category_link($noutati_cat->term_id)); ?>" class="view-all">Vezi toate →</a>
-                    <?php
-    endif; ?>
-                </div>
-                <div class="category-posts">
-                    <?php foreach ($noutati_posts as $post):
-        setup_postdata($post); ?>
-                        <article class="post-card">
-                            <div class="post-card__thumb">
-                                <?php saligny_post_thumbnail('saligny-card-thumb'); ?>
-                            </div>
-                            <div class="post-card__content">
-                                <h3 class="post-card__title">
-                                    <a href="<?php echo esc_url(get_permalink($post->ID)); ?>"><?php echo esc_html($post->post_title); ?></a>
-                                </h3>
-                                <div class="post-card__meta">
-                                    <?php echo saligny_icon('calendar'); ?> <?php echo get_the_date('M j, Y', $post->ID); ?>
-                                </div>
-                                <p class="post-card__excerpt"><?php echo wp_trim_words($post->post_content, 25); ?></p>
-                            </div>
-                        </article>
-                    <?php
-    endforeach;
-    wp_reset_postdata(); ?>
-                </div>
-            </div>
-            <?php
-endif; ?>
+$default_cats = array(
+    1 => array('title' => 'Noutăți', 'icon' => 'megaphone', 'slug' => 'noutati'),
+    2 => array('title' => 'Activități', 'icon' => 'target', 'slug' => 'activitati'),
+    3 => array('title' => 'Proiecte', 'icon' => 'building', 'slug' => 'proiecte'),
+);
 
-            <!-- ACTIVITATI SECTION -->
-            <?php
-$activitati_posts = saligny_get_category_posts('activitati', 5);
-if (!empty($activitati_posts)):
-?>
-            <div class="category-block">
-                <div class="category-header category-header--activitati">
-                    <h2><?php echo saligny_icon('target'); ?> Activități</h2>
-                    <?php $activitati_cat = get_category_by_slug('activitati'); ?>
-                    <?php if ($activitati_cat): ?>
-                        <a href="<?php echo esc_url(get_category_link($activitati_cat->term_id)); ?>" class="view-all">Vezi toate →</a>
-                    <?php
-    endif; ?>
-                </div>
-                <div class="category-posts">
-                    <?php foreach ($activitati_posts as $post):
-        setup_postdata($post); ?>
-                        <article class="post-card">
-                            <div class="post-card__thumb">
-                                <?php saligny_post_thumbnail('saligny-card-thumb'); ?>
-                            </div>
-                            <div class="post-card__content">
-                                <h3 class="post-card__title">
-                                    <a href="<?php echo esc_url(get_permalink($post->ID)); ?>"><?php echo esc_html($post->post_title); ?></a>
-                                </h3>
-                                <div class="post-card__meta">
-                                    <?php echo saligny_icon('calendar'); ?> <?php echo get_the_date('M j, Y', $post->ID); ?>
-                                </div>
-                                <p class="post-card__excerpt"><?php echo wp_trim_words($post->post_content, 25); ?></p>
-                            </div>
-                        </article>
-                    <?php
-    endforeach;
-    wp_reset_postdata(); ?>
-                </div>
-            </div>
-            <?php
-endif; ?>
+$any_posts_found = false;
 
-            <!-- PROIECTE SECTION -->
-            <?php
-$proiecte_posts = saligny_get_category_posts('proiecte', 5);
-if (!empty($proiecte_posts)):
+for ($i = 1; $i <= 3; $i++) {
+    $block_title = get_theme_mod('front_cat_title_' . $i, $default_cats[$i]['title']);
+    $block_icon = get_theme_mod('front_cat_icon_' . $i, $default_cats[$i]['icon']);
+    $block_slug = get_theme_mod('front_cat_slug_' . $i, $default_cats[$i]['slug']);
+
+    if ($block_slug) {
+        $cat_posts = saligny_get_category_posts($block_slug, 5);
+        if (!empty($cat_posts)):
+            $any_posts_found = true;
 ?>
-            <div class="category-block">
-                <div class="category-header category-header--proiecte">
-                    <h2><?php echo saligny_icon('building'); ?> Proiecte</h2>
-                    <?php $proiecte_cat = get_category_by_slug('proiecte'); ?>
-                    <?php if ($proiecte_cat): ?>
-                        <a href="<?php echo esc_url(get_category_link($proiecte_cat->term_id)); ?>" class="view-all">Vezi toate →</a>
-                    <?php
-    endif; ?>
-                </div>
-                <div class="category-posts">
-                    <?php foreach ($proiecte_posts as $post):
-        setup_postdata($post); ?>
-                        <article class="post-card">
-                            <div class="post-card__thumb">
-                                <?php saligny_post_thumbnail('saligny-card-thumb'); ?>
+                        <div class="category-block">
+                            <div class="category-header category-header--<?php echo esc_attr($block_slug); ?>">
+                                <h2><?php echo saligny_icon($block_icon); ?> <?php echo esc_html($block_title); ?></h2>
+                                <?php $cat_obj = get_category_by_slug($block_slug); ?>
+                                <?php if ($cat_obj): ?>
+                                    <a href="<?php echo esc_url(get_category_link($cat_obj->term_id)); ?>" class="view-all">Vezi toate →</a>
+                                <?php
+            endif; ?>
                             </div>
-                            <div class="post-card__content">
-                                <h3 class="post-card__title">
-                                    <a href="<?php echo esc_url(get_permalink($post->ID)); ?>"><?php echo esc_html($post->post_title); ?></a>
-                                </h3>
-                                <div class="post-card__meta">
-                                    <?php echo saligny_icon('calendar'); ?> <?php echo get_the_date('M j, Y', $post->ID); ?>
-                                </div>
-                                <p class="post-card__excerpt"><?php echo wp_trim_words($post->post_content, 25); ?></p>
+                            <div class="category-posts">
+                                <?php foreach ($cat_posts as $post):
+                setup_postdata($post); ?>
+                                    <article class="post-card">
+                                        <div class="post-card__thumb">
+                                            <?php saligny_post_thumbnail('saligny-card-thumb'); ?>
+                                        </div>
+                                        <div class="post-card__content">
+                                            <h3 class="post-card__title">
+                                                <a href="<?php echo esc_url(get_permalink($post->ID)); ?>"><?php echo esc_html($post->post_title); ?></a>
+                                            </h3>
+                                            <div class="post-card__meta">
+                                                <?php echo saligny_icon('calendar'); ?> <?php echo get_the_date('M j, Y', $post->ID); ?>
+                                            </div>
+                                            <p class="post-card__excerpt"><?php echo wp_trim_words($post->post_content, 25); ?></p>
+                                        </div>
+                                    </article>
+                                <?php
+            endforeach;
+            wp_reset_postdata(); ?>
                             </div>
-                        </article>
-                    <?php
-    endforeach;
-    wp_reset_postdata(); ?>
-                </div>
-            </div>
+                        </div>
             <?php
-endif; ?>
+        endif;
+    }
+}
+?>
 
             <?php
 // If no category posts exist yet, show latest posts
-if (empty($noutati_posts) && empty($activitati_posts) && empty($proiecte_posts)):
+if (!$any_posts_found):
 ?>
             <div class="category-block">
                 <div class="category-header category-header--noutati">

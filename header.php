@@ -17,8 +17,19 @@
     <div class="top-bar">
         <div class="top-bar-inner">
             <div class="top-bar-social">
-                <a href="https://facebook.com/AnghelSalignyBuc" target="_blank" aria-label="Facebook" rel="noopener"><?php echo saligny_icon('facebook', '1.1rem'); ?></a>
-                <a href="https://instagram.com/" target="_blank" aria-label="Instagram" rel="noopener"><?php echo saligny_icon('instagram', '1.1rem'); ?></a>
+                <?php
+$facebook_url = get_theme_mod('header_social_facebook', 'https://facebook.com/AnghelSalignyBuc');
+$instagram_url = get_theme_mod('header_social_instagram', 'https://instagram.com/');
+
+if ($facebook_url): ?>
+                    <a href="<?php echo esc_url($facebook_url); ?>" target="_blank" aria-label="Facebook" rel="noopener"><?php echo saligny_icon('facebook', '1.1rem'); ?></a>
+                <?php
+endif;
+
+if ($instagram_url): ?>
+                    <a href="<?php echo esc_url($instagram_url); ?>" target="_blank" aria-label="Instagram" rel="noopener"><?php echo saligny_icon('instagram', '1.1rem'); ?></a>
+                <?php
+endif; ?>
             </div>
         </div>
     </div>

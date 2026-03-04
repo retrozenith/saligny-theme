@@ -474,6 +474,15 @@ function saligny_maybe_flush_rewrite_rules()
 add_action('init', 'saligny_maybe_flush_rewrite_rules');
 
 // ============================================
+// CUSTOMIZER
+// ============================================
+require get_template_directory() . '/inc/customizer-history.php';
+require get_template_directory() . '/inc/customizer-header.php';
+require get_template_directory() . '/inc/customizer-footer.php';
+require get_template_directory() . '/inc/customizer-front.php';
+require get_template_directory() . '/inc/customizer-contact.php';
+
+// ============================================
 // DESIGNER CREDIT
 // ============================================
 add_action('wp_footer', function () {
