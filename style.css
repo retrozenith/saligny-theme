@@ -169,6 +169,37 @@ h6 {
 /* ============================================
    3. HEADER
    ============================================ */
+.top-bar {
+    background: rgba(0, 0, 0, 0.15);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.top-bar-inner {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 6px 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.top-bar-social {
+    display: flex;
+    gap: 12px;
+}
+
+.top-bar-social a {
+    color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.top-bar-social a:hover {
+    color: var(--color-gold);
+    transform: translateY(-2px);
+}
+
 .site-header {
     background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 50%, var(--color-primary-light) 100%);
     color: var(--color-white);
@@ -772,7 +803,8 @@ h6 {
     gap: 16px;
     padding: 18px 20px;
     border-bottom: 1px solid var(--color-bg);
-    transition: background var(--transition-fast);
+    border-left: 3px solid transparent;
+    transition: all var(--transition-fast);
 }
 
 .post-card:last-child {
@@ -781,6 +813,8 @@ h6 {
 
 .post-card:hover {
     background: var(--color-bg);
+    border-left-color: var(--color-gold);
+    padding-left: 24px;
 }
 
 .post-card__thumb {

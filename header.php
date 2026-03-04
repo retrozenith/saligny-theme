@@ -14,6 +14,14 @@
 <a class="sr-only" href="#main-content"><?php esc_html_e('Sari la conținut', 'saligny-theme'); ?></a>
 
 <header class="site-header" id="site-header" role="banner">
+    <div class="top-bar">
+        <div class="top-bar-inner">
+            <div class="top-bar-social">
+                <a href="https://facebook.com/AnghelSalignyBuc" target="_blank" aria-label="Facebook" rel="noopener"><?php echo saligny_icon('facebook', '1.1rem'); ?></a>
+                <a href="https://instagram.com/" target="_blank" aria-label="Instagram" rel="noopener"><?php echo saligny_icon('instagram', '1.1rem'); ?></a>
+            </div>
+        </div>
+    </div>
     <div class="header-inner">
         <div class="site-branding">
             <?php if (has_custom_logo()): ?>
