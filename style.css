@@ -67,6 +67,9 @@ body {
     color: var(--color-text);
     background-color: var(--color-bg);
     overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 a {
@@ -637,6 +640,7 @@ h6 {
    ============================================ */
 .site-content {
     padding: 30px 0 50px;
+    flex: 1 0 auto;
 }
 
 .content-wrap {
