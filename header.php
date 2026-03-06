@@ -16,20 +16,46 @@
 <header class="site-header" id="site-header" role="banner">
     <div class="top-bar">
         <div class="top-bar-inner">
+            <?php
+            $facebook_url = get_theme_mod('header_social_facebook', 'https://facebook.com/AnghelSalignyBuc');
+            $instagram_url = get_theme_mod('header_social_instagram', 'https://instagram.com/colegiulanghelsaligny');
+            $contact_email = get_theme_mod('header_contact_email', 'anghel_saligny@yahoo.com');
+            $contact_number = get_theme_mod('header_contact_phone', '021.340.26.54');
+            $contact_address = get_theme_mod('header_contact_address', 'Bd. Nicolae Grigorescu nr. 12, Sector 3, Bucuresti');
+            $contact_number_href = preg_replace('/[^0-9+]/', '', (string) $contact_number);
+            ?>
+
             <div class="top-bar-social">
-                <?php
-$facebook_url = get_theme_mod('header_social_facebook', 'https://facebook.com/AnghelSalignyBuc');
-$instagram_url = get_theme_mod('header_social_instagram', 'https://instagram.com/');
-
-if ($facebook_url): ?>
+                <?php if ($facebook_url): ?>
                     <a href="<?php echo esc_url($facebook_url); ?>" target="_blank" aria-label="Facebook" rel="noopener"><?php echo saligny_icon('facebook', '1.1rem'); ?></a>
-                <?php
-endif;
+                <?php endif; ?>
 
-if ($instagram_url): ?>
+                <?php if ($instagram_url): ?>
                     <a href="<?php echo esc_url($instagram_url); ?>" target="_blank" aria-label="Instagram" rel="noopener"><?php echo saligny_icon('instagram', '1.1rem'); ?></a>
-                <?php
-endif; ?>
+                <?php endif; ?>
+            </div>
+
+            <div class="top-bar-contact">
+                <?php if ($contact_email): ?>
+                    <p>
+                        <?php echo saligny_icon('email'); ?>
+                        <a href="mailto:<?php echo esc_attr($contact_email); ?>"><?php echo esc_html($contact_email); ?></a>
+                    </p>
+                <?php endif; ?>
+
+                <?php if ($contact_address): ?>
+                    <p>
+                        <?php echo saligny_icon('pin'); ?>
+                        <?php echo esc_html($contact_address); ?>
+                    </p>
+                <?php endif; ?>
+
+                <?php if ($contact_number): ?>
+                    <p>
+                        <?php echo saligny_icon('phone'); ?>
+                        <a href="tel:<?php echo esc_attr($contact_number_href); ?>"><?php echo esc_html($contact_number); ?></a>
+                    </p>
+                <?php endif; ?>
             </div>
         </div>
     </div>

@@ -4,7 +4,24 @@
 document.addEventListener('DOMContentLoaded', function () {
     var menuToggle = document.getElementById('menu-toggle');
     var mainNav = document.getElementById('main-navigation');
+    var siteHeader = document.getElementById('site-header');
     var MOBILE_BREAKPOINT = 1024;
+    var lastScrollY = window.pageYOffset;
+
+    // Hide top bar only while scrolling down.
+    if (siteHeader) {
+        window.addEventListener('scroll', function () {
+            var currentScrollY = window.pageYOffset;
+
+            if (currentScrollY > lastScrollY && currentScrollY > 10) {
+                siteHeader.classList.add('scrolled');
+            } else {
+                siteHeader.classList.remove('scrolled');
+            }
+
+            lastScrollY = currentScrollY;
+        });
+    }
 
     if (menuToggle && mainNav) {
         var menuClose = document.getElementById('menu-close');
