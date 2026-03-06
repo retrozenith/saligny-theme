@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+@source "../../**/*.php";
+
+@theme {
+    --color-primary: #1a3a5c;
+    --color-primary-dark: #0f2640;
+    --color-primary-light: #2a5a8c;
+    --color-gold: #c8a84e;
+    --color-gold-dark: #a8893e;
+    --color-gold-light: #e0c870;
+    --color-bg: #f0f2f5;
+    --color-bg-alt: #e8ecf0;
+    --color-text: #2c3e50;
+    --color-text-light: #5a6d7e;
+    --color-text-muted: #8899a6;
+    --color-border: #d1d9e0;
+    --color-success: #27ae60;
+    --color-accent-green: #3a7d44;
+
+    --font-primary: 'Inter', sans-serif;
+    --font-heading: 'Inter', sans-serif;
+}
+
+@layer components {
+
+    /* Navigation Menu Styles */
+    #main-navigation ul {
+        @apply flex items-center m-0 p-0 list-none;
+    }
+
+    #main-navigation>ul {
+        @apply space-x-2 xl:space-x-6;
+    }
+
+    #main-navigation li {
+        @apply relative;
+    }
+
+    #main-navigation a {
+        @apply block py-4 px-2 text-primary-dark font-extrabold text-xs sm:text-sm uppercase tracking-wide hover:text-gold transition-colors duration-200;
+    }
+
+    /* Fallback dropdown styles - hidden by default */
+    #main-navigation li ul {
+        @apply absolute top-full left-0 opacity-0 invisible bg-white shadow-lg min-w-[200px] border-t-2 border-gold flex-col transition-all duration-300 z-50 transform translate-y-2 pb-2;
+    }
+
+    #main-navigation li:hover>ul {
+        @apply opacity-100 visible translate-y-0;
+    }
+
+    #main-navigation li ul li {
+        @apply w-full;
+    }
+
+    #main-navigation li ul a {
+        @apply py-3 px-5 text-sm normal-case font-semibold border-b border-gray-100;
+    }
+
+    #main-navigation li ul a:hover {
+        @apply bg-gray-50;
+    }
+
+    #main-navigation li ul a:last-child {
+        @apply border-b-0;
+    }
+}

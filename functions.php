@@ -73,6 +73,11 @@ function saligny_scripts()
     // Theme stylesheet
     wp_enqueue_style('saligny-style', get_stylesheet_uri(), array('saligny-google-fonts'), filemtime(get_stylesheet_directory() . '/style.css'));
 
+    // Tailwind CSS
+    $tailwind_path = get_template_directory() . '/assets/css/tailwind.css';
+    $tailwind_version = file_exists($tailwind_path) ? filemtime($tailwind_path) : '1.0.0';
+    wp_enqueue_style('saligny-tailwind', get_template_directory_uri() . '/assets/css/tailwind.css', array(), $tailwind_version);
+
     // Theme JavaScript
     wp_enqueue_script('saligny-navigation', get_template_directory_uri() . '/js/navigation.js', array(), '1.0.0', true);
 

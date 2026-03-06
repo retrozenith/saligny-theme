@@ -8,48 +8,47 @@
 get_header();
 ?>
 
-<main id="main-content" class="site-content" role="main">
-    <div class="content-wrap">
-        <div class="main-content">
+<main id="main-content" class="site-content w-full" role="main">
+    <div class="main-content w-full">
 
             <!-- MAIN HERO SECTION -->
-            <section class="hero-main">
-                <div class="hero-main__content">
-                    <span class="hero-main__badge"><?php echo esc_html(get_theme_mod('front_hero_badge', 'Din 1959')); ?></span>
-                    <h1 class="hero-main__title"><?php echo wp_kses_post(get_theme_mod('front_hero_title', '65 de ani de<br><span>Excelență Tehnică</span>')); ?></h1>
-                    <p class="hero-main__description"><?php echo esc_html(get_theme_mod('front_hero_desc', 'Pregătim generațiile viitorului printr-o educație practică, inovatoare și adaptată cerințelor pieței muncii moderne.')); ?></p>
-                    
-                    <div class="hero-main__actions">
-                        <a href="<?php echo esc_url(get_theme_mod('front_hero_btn1_url', home_url('/despre-noi/'))); ?>" class="btn-primary"><?php echo esc_html(get_theme_mod('front_hero_btn1_text', 'Descoperă Colegiul')); ?></a>
-                        <a href="<?php echo esc_url(get_theme_mod('front_hero_btn2_url', home_url('/contact/'))); ?>" class="btn-outline"><?php echo esc_html(get_theme_mod('front_hero_btn2_text', 'Admitere & Contact')); ?></a>
-                    </div>
+            <section class="relative w-full min-h-[500px] md:min-h-[600px] lg:min-h-[700px] flex items-center justify-start overflow-hidden bg-primary-dark mb-12 rounded-xl group">
+                <!-- Background Image & Gradient Overlay -->
+                <?php $hero_bg = get_template_directory_uri() . '/assets/img/intrare-2.jpg'; ?>
+                <div class="absolute inset-0 z-0">
+                    <img src="<?php echo esc_url($hero_bg); ?>" alt="Ero image" class="w-full h-full object-cover object-center transform scale-100 group-hover:scale-105 transition-transform duration-1000 ease-in-out">
+                    <div class="absolute inset-0 bg-gradient-to-r from-primary-dark/95 via-primary-dark/70 to-transparent"></div>
                 </div>
 
-                <div class="hero-main__stats">
-                    <?php
-for ($i = 1; $i <= 3; $i++):
-    $default_icons = array(1 => 'settings', 2 => 'home', 3 => 'target');
-    $default_titles = array(1 => 'Profil Tehnic - Mecanică', 2 => 'Construcții & Instalații', 3 => 'Profil Sportiv');
-    $default_descs = array(1 => 'Mecatronică, Întreținere și Reparații', 2 => 'Desenatori, Structuri și Finisaje', 3 => 'Instructori Sportivi');
-
-    $icon = get_theme_mod('front_stat_icon_' . $i, $default_icons[$i]);
-    $title = get_theme_mod('front_stat_title_' . $i, $default_titles[$i]);
-    $desc = get_theme_mod('front_stat_desc_' . $i, $default_descs[$i]);
-
-    if ($title):
-?>
-                    <div class="stat-card">
-                        <span class="stat-icon"><?php echo saligny_icon($icon); ?></span>
-                        <div class="stat-info">
-                            <strong><?php echo esc_html($title); ?></strong>
-                            <span><?php echo esc_html($desc); ?></span>
+                <!-- Hero Content -->
+                <div class="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-16 lg:py-24 flex flex-col items-start text-white">
+                    <div class="max-w-xl xl:max-w-2xl">
+                        <span class="inline-block px-4 py-1.5 mb-6 text-sm font-bold tracking-wider text-gold-light uppercase bg-white/10 border border-white/20 rounded-full backdrop-blur-md">
+                            <?php echo esc_html(get_theme_mod('front_hero_badge', 'Din 1959')); ?>
+                        </span>
+                        
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6 text-white drop-shadow-md tracking-tight">
+                            Inspirație, Inovație și<br />
+                            <span class="text-white">Descoperire.</span>
+                        </h1>
+                        
+                        <p class="text-lg sm:text-xl text-white/90 leading-relaxed mb-8 max-w-lg drop-shadow-sm">
+                            <?php echo esc_html(get_theme_mod('front_hero_desc', 'O carieră de succes începe cu educația de calitate. Împreună punem bazele cunoștințelor ce vor fi fundația unei cariere de succes.')); ?>
+                        </p>
+                        
+                        <div class="flex flex-wrap gap-4 mt-4">
+                            <a href="<?php echo esc_url(get_theme_mod('front_hero_btn1_url', home_url('/despre-noi/'))); ?>" class="inline-flex items-center justify-center px-8 py-3.5 text-base font-bold text-white bg-gold hover:bg-white hover:text-gold-dark rounded shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5">
+                                <?php echo esc_html(get_theme_mod('front_hero_btn1_text', 'Descoperă Colegiul')); ?>
+                            </a>
+                            <a href="<?php echo esc_url(get_theme_mod('front_hero_btn2_url', home_url('/contact/'))); ?>" class="inline-flex items-center justify-center px-8 py-3.5 text-base font-bold text-white bg-transparent border-2 border-white/40 hover:border-white hover:bg-white/10 rounded backdrop-blur-sm transition-all duration-300">
+                                <?php echo esc_html(get_theme_mod('front_hero_btn2_text', 'Află mai multe')); ?>
+                            </a>
                         </div>
                     </div>
-                    <?php
-    endif;
-endfor; ?>
                 </div>
             </section>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 w-full">
 
             <!-- HERO SLIDER -->
             <div class="hero-slider" id="hero-slider">
@@ -226,6 +225,7 @@ if (!$any_posts_found):
             <?php
 endif; ?>
 
+            </div> <!-- Close internal container -->
     </div>
 </main>
 
