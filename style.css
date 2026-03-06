@@ -103,7 +103,8 @@ h6 {
     font-family: var(--font-heading);
     font-weight: 700;
     line-height: 1.3;
-    color: var(--color-primary-dark);
+    /* color: var(--color-primary-dark); */
+    /* Disabled to allow Tailwind text color utilities */
 }
 
 /* ============================================

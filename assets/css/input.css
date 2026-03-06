@@ -3,47 +3,112 @@
 @source "../../**/*.php";
 
 @theme {
-    --color-primary: #1a3a5c;
-    --color-primary-dark: #0f2640;
-    --color-primary-light: #2a5a8c;
-    --color-gold: #c8a84e;
-    --color-gold-dark: #a8893e;
-    --color-gold-light: #e0c870;
-    --color-bg: #f0f2f5;
-    --color-bg-alt: #e8ecf0;
-    --color-text: #2c3e50;
-    --color-text-light: #5a6d7e;
-    --color-text-muted: #8899a6;
-    --color-border: #d1d9e0;
-    --color-success: #27ae60;
-    --color-accent-green: #3a7d44;
+    --color-primary: #112a4f;
+    /* Dark Blue (Top Bar) */
+    --color-primary-dark: #0a1b38;
+    /* Darker Blue (Hover) */
+    --color-secondary: #e63946;
+    /* Red (Logo Accent) */
+    --color-text-main: #333333;
+    /* Dark Gray (Primary text) */
+    --color-text-light: #555555;
+    /* Gray (Secondary Text) */
+    --color-muted: #888888;
+    /* Light Gray */
+    --color-border: #e2e8f0;
+    /* Border Color */
+    --color-bg-light: #f8f9fa;
+    /* Light Background */
 
-    --font-primary: 'Inter', sans-serif;
-    --font-heading: 'Inter', sans-serif;
+    --font-primary: 'Lora', 'Georgia', serif;
+    --font-heading: 'Lora', 'Georgia', serif;
+    --font-sans: 'Inter', system-ui, sans-serif;
+    --font-nav: 'Inter', system-ui, sans-serif;
+
+    --animate-fade-up: fadeUp 0.8s ease both;
+    --animate-pulse-slow: pulseSlow 3s infinite;
+    --animate-pulse-fast: pulseFast 2s infinite;
+    --animate-rotate-slow: rotateGeom 24s linear infinite;
+    --animate-rotate-slow-reverse: rotateGeom 16s linear infinite reverse;
+
+    @keyframes fadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(24px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes pulseSlow {
+
+        0%,
+        100% {
+            opacity: 1;
+            transform: scale(1);
+            box-shadow: 0 0 16px var(--color-accent2);
+        }
+
+        50% {
+            opacity: 0.4;
+            transform: scale(0.8);
+            box-shadow: 0 0 4px var(--color-accent2);
+        }
+    }
+
+    @keyframes pulseFast {
+
+        0%,
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        50% {
+            opacity: 0.4;
+            transform: scale(0.8);
+        }
+    }
+
+    @keyframes rotateGeom {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+}
+
+@layer utilities {
+    .bg-grid {
+        background-image:
+            linear-gradient(rgba(45, 127, 255, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(45, 127, 255, 0.05) 1px, transparent 1px);
+        background-size: 48px 48px;
+    }
+
+    .clip-button {
+        clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    }
+
+    .text-gradient {
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-image: linear-gradient(135deg, var(--color-accent2), var(--color-accent));
+    }
 }
 
 @layer components {
 
-    /* Navigation Menu Styles */
-    #main-navigation ul {
-        @apply flex items-center m-0 p-0 list-none;
-    }
-
-    #main-navigation>ul {
-        @apply space-x-2 xl:space-x-6;
-    }
-
-    #main-navigation li {
-        @apply relative;
-    }
-
-    #main-navigation a {
-        @apply block py-4 px-2 text-primary-dark font-extrabold text-xs sm:text-sm uppercase tracking-wide hover:text-gold transition-colors duration-200;
-    }
-
     /* Fallback dropdown styles - hidden by default */
     #main-navigation li ul {
-        @apply absolute top-full left-0 opacity-0 invisible bg-white shadow-lg min-w-[200px] border-t-2 border-gold flex-col transition-all duration-300 z-50 transform translate-y-2 pb-2;
+        @apply absolute top-[60px] left-0 opacity-0 invisible bg-white shadow-lg min-w-[200px] border-t-2 border-primary flex-col transition-all duration-300 z-50 transform translate-y-2 pb-2;
     }
 
     #main-navigation li:hover>ul {
@@ -55,11 +120,11 @@
     }
 
     #main-navigation li ul a {
-        @apply py-3 px-5 text-sm normal-case font-semibold border-b border-gray-100;
+        @apply py-3 px-5 text-sm normal-case font-sans font-medium border-b border-border text-text-light;
     }
 
     #main-navigation li ul a:hover {
-        @apply bg-gray-50;
+        @apply bg-bg-light text-primary;
     }
 
     #main-navigation li ul a:last-child {
