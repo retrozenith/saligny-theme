@@ -10,6 +10,12 @@ document.addEventListener('DOMContentLoaded', function () {
     var lastScrollY = window.pageYOffset;
     var headerScrolled = false;
 
+    // Account for WordPress admin bar height so scroll thresholds are correct.
+    function getAdminBarHeight() {
+        var adminBar = document.getElementById('wpadminbar');
+        return adminBar ? adminBar.offsetHeight : 0;
+    }
+
     function syncTopBarHeight() {
         if (!siteHeader || !topBar) return;
         siteHeader.style.setProperty('--top-bar-height', topBar.scrollHeight + 'px');
@@ -33,17 +39,25 @@ document.addEventListener('DOMContentLoaded', function () {
             var delta = currentScrollY - lastScrollY;
             var isDesktop = window.innerWidth > MOBILE_BREAKPOINT;
 
-                // Thresholds differ: desktop needs more scroll to trigger hide.
-            var noiseThreshold = isDesktop ? 6 : 3;
-            var hideThreshold  = isDesktop ? 100 : 40;
-
-            // Ignore tiny noise to avoid jitter.
-            if (Math.abs(delta) < noiseThreshold) {
+            // Scroll hide only on desktop.
+            if (!isDesktop) {
+                if (headerScrolled) {
+                    siteHeader.classList.remove('scrolled');
+                    headerScrolled = false;
+                }
                 lastScrollY = currentScrollY;
                 return;
             }
 
-            if (delta > 0 && currentScrollY > hideThreshold && !headerScrolled) {
+            // Ignore tiny wheel/touchpad noise.
+            if (Math.abs(delta) < 6) {
+                lastScrollY = currentScrollY;
+                return;
+            }
+
+            var adminBarH = getAdminBarHeight();
+
+            if (delta > 0 && currentScrollY > (100 + adminBarH) && !headerScrolled) {
                 siteHeader.classList.add('scrolled');
                 headerScrolled = true;
             }
@@ -53,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 headerScrolled = false;
             }
 
-            if (currentScrollY <= 10 && headerScrolled) {
+            if (currentScrollY <= (10 + adminBarH) && headerScrolled) {
                 siteHeader.classList.remove('scrolled');
                 headerScrolled = false;
             }

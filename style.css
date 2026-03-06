@@ -298,6 +298,17 @@ h6 {
     isolation: isolate;
 }
 
+/* When WordPress admin bar is visible, offset the sticky header */
+.admin-bar .site-header {
+    top: 32px;
+}
+
+@media (max-width: 782px) {
+    .admin-bar .site-header {
+        top: 46px;
+    }
+}
+
 .site-header::before {
     content: '';
     position: absolute;
@@ -1442,6 +1453,10 @@ h6 {
     color: rgba(255, 255, 255, 0.7);
 }
 
+.footer-social-mobile {
+    display: none;
+}
+
 .footer-bottom {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     padding: 18px 20px;
@@ -1782,6 +1797,31 @@ h6 {
 
 /* Tablet and below: switch to hamburger menu */
 @media (max-width: 1024px) {
+    .top-bar {
+        display: none;
+    }
+
+    .footer-social-mobile {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
+        padding: 16px 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .footer-social-mobile a {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1.3rem;
+        line-height: 1;
+        transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .footer-social-mobile a:hover {
+        color: var(--color-gold-light);
+        transform: translateY(-2px);
+    }
+
     .top-bar-inner {
         flex-wrap: wrap;
         row-gap: 8px;

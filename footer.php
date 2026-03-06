@@ -75,6 +75,18 @@ endif; ?>
             </div>
         </div>
 
+        <div class="footer-social-mobile">
+            <?php
+            $facebook_url  = get_theme_mod('header_social_facebook', 'https://facebook.com/AnghelSalignyBuc');
+            $instagram_url = get_theme_mod('header_social_instagram', 'https://instagram.com/colegiulanghelsaligny');
+            if ($facebook_url): ?>
+                <a href="<?php echo esc_url($facebook_url); ?>" target="_blank" aria-label="Facebook" rel="noopener"><?php echo saligny_icon('facebook', '1.3rem'); ?></a>
+            <?php endif; ?>
+            <?php if ($instagram_url): ?>
+                <a href="<?php echo esc_url($instagram_url); ?>" target="_blank" aria-label="Instagram" rel="noopener"><?php echo saligny_icon('instagram', '1.3rem'); ?></a>
+            <?php endif; ?>
+        </div>
+
         <div class="footer-bottom">
             <?php
 $copyright = get_theme_mod('footer_copyright_text', '&copy; {year} {site_title}. Toate drepturile rezervate.');
