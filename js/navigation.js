@@ -5,9 +5,19 @@ document.addEventListener('DOMContentLoaded', function () {
     var menuToggle = document.getElementById('menu-toggle');
     var mainNav = document.getElementById('main-navigation');
     var siteHeader = document.getElementById('site-header');
+    var topBar = siteHeader ? siteHeader.querySelector('.top-bar') : null;
     var MOBILE_BREAKPOINT = 1024;
     var lastScrollY = window.pageYOffset;
     var headerScrolled = false;
+
+    function syncTopBarHeight() {
+        if (!siteHeader || !topBar) return;
+        siteHeader.style.setProperty('--top-bar-height', topBar.scrollHeight + 'px');
+    }
+
+    syncTopBarHeight();
+    window.addEventListener('load', syncTopBarHeight);
+    window.addEventListener('resize', syncTopBarHeight);
 
     // Desktop scroll behavior: hide top bar only after clear downward scroll,
     // show it back with a softer threshold when scrolling up.
@@ -17,21 +27,17 @@ document.addEventListener('DOMContentLoaded', function () {
             var delta = currentScrollY - lastScrollY;
             var isDesktop = window.innerWidth > MOBILE_BREAKPOINT;
 
-            if (!isDesktop) {
-                if (headerScrolled) {
-                    siteHeader.classList.remove('scrolled');
-                    headerScrolled = false;
-                }
+                // Thresholds differ: desktop needs more scroll to trigger hide.
+            var noiseThreshold = isDesktop ? 6 : 3;
+            var hideThreshold  = isDesktop ? 100 : 40;
+
+            // Ignore tiny noise to avoid jitter.
+            if (Math.abs(delta) < noiseThreshold) {
                 lastScrollY = currentScrollY;
                 return;
             }
 
-            // Ignore tiny wheel/touchpad noise to avoid jitter.
-            if (Math.abs(delta) < 6) {
-                return;
-            }
-
-            if (delta > 0 && currentScrollY > 100 && !headerScrolled) {
+            if (delta > 0 && currentScrollY > hideThreshold && !headerScrolled) {
                 siteHeader.classList.add('scrolled');
                 headerScrolled = true;
             }
@@ -41,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 headerScrolled = false;
             }
 
-            if (currentScrollY <= 20 && headerScrolled) {
+            if (currentScrollY <= 10 && headerScrolled) {
                 siteHeader.classList.remove('scrolled');
                 headerScrolled = false;
             }
