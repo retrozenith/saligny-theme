@@ -73,11 +73,17 @@ function saligny_scripts()
     // Theme stylesheet
     wp_enqueue_style('saligny-style', get_stylesheet_uri(), array('saligny-google-fonts'), filemtime(get_stylesheet_directory() . '/style.css'));
 
+    // GTranslate custom styling
+    wp_enqueue_style('saligny-gtranslate', get_template_directory_uri() . '/css/gtranslate-custom.css', array(), filemtime(get_stylesheet_directory() . '/css/gtranslate-custom.css'));
+
     // Theme JavaScript
     wp_enqueue_script('saligny-navigation', get_template_directory_uri() . '/js/navigation.js', array(), '1.0.0', true);
 
     // Slider script
     wp_enqueue_script('saligny-slider', get_template_directory_uri() . '/js/slider.js', array(), '1.0.0', true);
+
+    // GTranslate auto-hide script (mobile)
+    wp_enqueue_script('saligny-gtranslate', get_template_directory_uri() . '/js/gtranslate.js', array(), '1.0.0', true);
 }
 add_action('wp_enqueue_scripts', 'saligny_scripts');
 
@@ -876,17 +882,32 @@ function saligny_nav_health_check()
         return;
     }
 
-    $last_check = (int) get_option('saligny_nav_health_last_check', 0);
-    $interval = 6 * HOUR_IN_SECONDS;
+    // Run health check on every admin page load (light check, caches result)
+    static $check_done = false;
+    if ($check_done) {
+        return;
+    }
+    $check_done = true;
 
-    if (($last_check + $interval) > time()) {
+    saligny_ensure_primary_menu_integrity();
+}
+add_action('admin_init', 'saligny_nav_health_check');
+
+function saligny_admin_menu_notice()
+{
+    if (!current_user_can('manage_options')) {
         return;
     }
 
-    saligny_ensure_primary_menu_integrity();
-    update_option('saligny_nav_health_last_check', time());
+    $menu_obj = wp_get_nav_menu_object('Meniu Principal');
+    if (!$menu_obj) {
+        echo '<div class="notice notice-warning is-dismissible"><p>';
+        echo '<strong>Atenție:</strong> Meniul principal lipsește. Se va recrea automat în câteva secunde.<br>';
+        echo 'Dacă problema persista, contactează dezvoltatorul temei.';
+        echo '</p></div>';
+    }
 }
-add_action('admin_init', 'saligny_nav_health_check');
+add_action('admin_notices', 'saligny_admin_menu_notice');
 
 function saligny_force_home_first_after_menu_save($menu_id)
 {
@@ -929,6 +950,163 @@ function saligny_maybe_flush_rewrite_rules()
     }
 }
 add_action('init', 'saligny_maybe_flush_rewrite_rules');
+
+// ============================================
+// ADMIN PAGE: Theme Health & Integrity
+// ============================================
+function saligny_admin_menu()
+{
+    add_menu_page(
+        'Saligny Theme Health',
+        'Tema Saligny',
+        'manage_options',
+        'saligny-theme-health',
+        'saligny_render_theme_health_page',
+        'dashicons-wrench',
+        60
+    );
+}
+add_action('admin_menu', 'saligny_admin_menu');
+
+function saligny_render_theme_health_page()
+{
+    if (!current_user_can('manage_options')) {
+        wp_die('Acces neautorizat.');
+    }
+
+    // Handle form submissions (actions)
+    $action_message = '';
+    if (isset($_POST['saligny_action']) && wp_verify_nonce($_POST['saligny_nonce'], 'saligny_theme_action')) {
+        $action = sanitize_text_field($_POST['saligny_action']);
+
+        if ($action === 'recreate_menu') {
+            saligny_ensure_primary_menu_integrity();
+            $action_message = '<div class="notice notice-success is-dismissible"><p>✓ Meniu recreat cu succes!</p></div>';
+        } elseif ($action === 'run_health_check') {
+            delete_option('saligny_nav_health_last_check');
+            saligny_nav_health_check();
+            $action_message = '<div class="notice notice-success is-dismissible"><p>✓ Health check rulat!</p></div>';
+        } elseif ($action === 'flush_permalinks') {
+            flush_rewrite_rules();
+            $action_message = '<div class="notice notice-success is-dismissible"><p>✓ Linkuri permanente reîncărcate!</p></div>';
+        }
+    }
+
+    // Gather theme status info
+    $menu_obj = wp_get_nav_menu_object('Meniu Principal');
+    $menu_items = $menu_obj ? wp_get_nav_menu_items($menu_obj->term_id) : array();
+
+    $theme = wp_get_theme();
+    $theme_version = $theme->get('Version');
+    $stylesheet = get_stylesheet();
+
+    $has_pages = count(get_pages()) > 0;
+    $has_menu = !empty($menu_obj);
+    $menu_item_count = count($menu_items);
+
+    ?>
+    <div class="wrap">
+        <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
+
+        <?php echo wp_kses_post($action_message); ?>
+
+        <div style="background: #fff; padding: 20px; border-radius: 8px; margin-top: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <h2 style="margin-top: 0; color: #1a3a5c;">📊 Status Temă</h2>
+
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 12px;"><strong>Tema Activă:</strong></td>
+                    <td style="padding: 12px;"><?php echo esc_html($theme->get('Name')); ?></td>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 12px;"><strong>Versiune:</strong></td>
+                    <td style="padding: 12px;"><?php echo esc_html($theme_version); ?></td>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 12px;"><strong>Stylesheet:</strong></td>
+                    <td style="padding: 12px;"><code><?php echo esc_html($stylesheet); ?></code></td>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 12px;"><strong>Meniu Principal:</strong></td>
+                    <td style="padding: 12px;">
+                        <?php
+                        if ($has_menu) {
+                            echo '<span style="color: green;">✓ Existent</span> (' . esc_html($menu_item_count) . ' articole)';
+                        } else {
+                            echo '<span style="color: red;">✗ Lipsă</span>';
+                        }
+                        ?>
+                    </td>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 12px;"><strong>Pagini Publicate:</strong></td>
+                    <td style="padding: 12px;"><?php echo count(get_pages()); ?></td>
+                </tr>
+                <tr>
+                    <td style="padding: 12px;"><strong>Ultima Verificare Health:</strong></td>
+                    <td style="padding: 12px;">
+                        <?php
+                        $last_check = get_option('saligny_nav_health_last_check');
+                        if ($last_check) {
+                            echo esc_html(date('Y-m-d H:i:s', (int) $last_check));
+                        } else {
+                            echo '<em>Niciodată</em>';
+                        }
+                        ?>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div style="background: #fff; padding: 20px; border-radius: 8px; margin-top: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <h2 style="margin-top: 0; color: #1a3a5c;">⚙️ Acțiuni de Troubleshooting</h2>
+
+            <p style="color: #666; margin-bottom: 20px;">Utilizează aceste butoane pentru a diagnostica și repara problemele temei.</p>
+
+            <form method="POST" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                <?php wp_nonce_field('saligny_theme_action', 'saligny_nonce'); ?>
+
+                <button type="submit" name="saligny_action" value="recreate_menu" class="button button-primary" style="padding: 10px 20px; font-size: 14px;">
+                    🔄 Recreaza Meniu Principal
+                </button>
+
+                <button type="submit" name="saligny_action" value="run_health_check" class="button button-secondary" style="padding: 10px 20px; font-size: 14px;">
+                    🏥 Rulează Health Check
+                </button>
+
+                <button type="submit" name="saligny_action" value="flush_permalinks" class="button button-secondary" style="padding: 10px 20px; font-size: 14px;">
+                    🔗 Reîncarcă Linkuri Permanente
+                </button>
+            </form>
+        </div>
+
+        <?php if ($has_menu && $menu_item_count > 0): ?>
+            <div style="background: #fff; padding: 20px; border-radius: 8px; margin-top: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                <h2 style="margin-top: 0; color: #1a3a5c;">📋 Articole Meniu</h2>
+                <ul style="columns: 2; list-style: none; padding: 0;">
+                    <?php foreach ($menu_items as $item): ?>
+                        <li style="padding: 6px 0; border-bottom: 1px solid #eee;">
+                            <?php
+                            $indent = (int) $item->menu_item_parent > 0 ? '&nbsp;&nbsp;&nbsp;&nbsp;' : '';
+                            echo esc_html($indent . '• ' . $item->title);
+                            ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+
+        <div style="background: #f0f2f5; padding: 15px; border-radius: 8px; margin-top: 20px; border-left: 4px solid #1a3a5c;">
+            <h3 style="margin-top: 0; color: #1a3a5c;">ℹ️ Informații</h3>
+            <p style="margin: 8px 0; font-size: 13px;">
+                <strong>Tema Saligny</strong> include verificări automate de integritate în fiecare 6 ore.
+                <br>Meniu-ul principal se recreează automat dacă lipsesc articole.
+                <br>Pentru asistență, contactează echipa de dezvoltare.
+            </p>
+        </div>
+    </div>
+    <?php
+}
 
 // ============================================
 // CUSTOMIZER

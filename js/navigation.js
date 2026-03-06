@@ -156,10 +156,14 @@ document.addEventListener('DOMContentLoaded', function () {
     var anchors = document.querySelectorAll('a[href^="#"]');
     for (var i = 0; i < anchors.length; i++) {
         anchors[i].addEventListener('click', function (e) {
-            var target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                e.preventDefault();
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            var href = this.getAttribute('href');
+            // Only process valid anchor selectors (not full URLs with hash)
+            if (href && href.indexOf('#') === 0 && href.indexOf('http') !== 0) {
+                var target = document.querySelector(href);
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
             }
         });
     }

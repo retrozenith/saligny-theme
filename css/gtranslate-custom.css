@@ -1,0 +1,398 @@
+/**
+ * GTranslate Widget Custom Styling
+ * Native GTranslate Implementation (gt_switcher_wrapper)
+ */
+
+/* Main wrapper container */
+.gt_switcher_wrapper {
+    position: fixed !important;
+    bottom: 30px !important;
+    left: 20px !important;
+    z-index: 9999 !important;
+    right: auto !important;
+    top: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+    align-items: flex-start !important;
+    opacity: 1 !important;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+/* Collapsed state - slide to edge */
+.gt_switcher_wrapper.gt-collapsed {
+    transform: translateX(-95%) !important;
+    opacity: 0.8 !important;
+}
+
+/* Show only flag when collapsed */
+.gt_switcher_wrapper.gt-collapsed a.glink:not(.gt-current-lang),
+.gt_switcher_wrapper.gt-collapsed #google_translate_element2 {
+    display: none !important;
+}
+
+.gt_switcher_wrapper.gt-collapsed a.gt-current-lang {
+    background: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 4px 12px rgba(26, 58, 92, 0.3) !important;
+}
+
+.gt_switcher_wrapper.gt-collapsed a.gt-current-lang:hover {
+    background: var(--color-primary) !important;
+    box-shadow: 0 6px 16px rgba(26, 58, 92, 0.4) !important;
+}
+
+.gt_switcher_wrapper.gt-collapsed a.gt-current-lang span {
+    display: none !important;
+}
+
+/* Show on hover/focus */
+.gt_switcher_wrapper:hover,
+.gt_switcher_wrapper:focus-within {
+    transform: translateX(0) !important;
+    opacity: 1 !important;
+}
+
+/* Individual language links */
+.gt_switcher_wrapper a.glink {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    padding: 10px 14px !important;
+    background: var(--color-primary) !important;
+    color: var(--color-white) !important;
+    border: 2px solid var(--color-primary) !important;
+    border-radius: 6px !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    white-space: nowrap !important;
+    box-shadow: 0 4px 12px rgba(26, 58, 92, 0.2) !important;
+    margin-bottom: 6px !important;
+    width: 100% !important;
+}
+
+.gt_switcher_wrapper a.glink:last-of-type {
+    margin-bottom: 0 !important;
+}
+
+.gt_switcher_wrapper a.glink:hover,
+.gt_switcher_wrapper a.glink:focus {
+    background: var(--color-primary-light) !important;
+    border-color: var(--color-gold) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px rgba(26, 58, 92, 0.3) !important;
+}
+
+/* Current language indicator */
+.gt_switcher_wrapper a.gt-current-lang {
+    background: var(--color-gold) !important;
+    border-color: var(--color-gold) !important;
+    color: var(--color-white) !important;
+    font-weight: 700 !important;
+}
+
+.gt_switcher_wrapper a.gt-current-lang:hover {
+    background: var(--color-gold-dark) !important;
+    border-color: var(--color-gold-dark) !important;
+}
+
+/* Flag images */
+.gt_switcher_wrapper img {
+    width: 24px !important;
+    height: 18px !important;
+    object-fit: cover !important;
+    border-radius: 2px !important;
+    flex-shrink: 0 !important;
+    display: block !important;
+}
+
+/* Text in links */
+.gt_switcher_wrapper a span {
+    display: block !important;
+    font-size: inherit !important;
+}
+
+/* Google Translate dropdown container */
+#google_translate_element2 {
+    margin-top: 6px !important;
+}
+
+#google_translate_element2 .goog-te-gadget {
+    font-family: inherit !important;
+    font-size: 0.85rem !important;
+}
+
+/* Select dropdown styling */
+.goog-te-gadget .goog-te-combo {
+    padding: 8px 10px !important;
+    font-size: 0.8rem !important;
+    background: var(--color-white) !important;
+    color: var(--color-text) !important;
+    border: 2px solid var(--color-primary) !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    font-weight: 500 !important;
+    width: 100% !important;
+    transition: all 0.3s ease !important;
+}
+
+.goog-te-gadget .goog-te-combo:hover,
+.goog-te-gadget .goog-te-combo:focus {
+    border-color: var(--color-gold) !important;
+    box-shadow: 0 4px 12px rgba(26, 58, 92, 0.2) !important;
+    background: var(--color-bg) !important;
+}
+
+/* PoweredBy text and link (remove or hide) */
+.goog-te-gadget-simple {
+    padding: 0 !important;
+}
+
+.goog-te-gadget .goog-te-gadget-simple {
+    background: transparent !important;
+    border: none !important;
+}
+
+.goog-te-gadget a.goog-te-menu-value,
+.goog-te-gadget-simple .goog-te-menu-value {
+    text-decoration: none !important;
+    color: var(--color-text) !important;
+}
+
+/* Hide the powered by Google badge styling */
+.goog-te-gadget-simple .goog-te-ft {
+    display: none !important;
+}
+
+.goog-te-gadget {
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Animation keyframe */
+@keyframes gtSwitcherPulse {
+    0%, 100% {
+        box-shadow: 0 4px 12px rgba(26, 58, 92, 0.2);
+    }
+    50% {
+        box-shadow: 0 6px 16px rgba(26, 58, 92, 0.3);
+    }
+}
+
+/* Subtle animation on page load */
+.gt_switcher_wrapper a.glink:first-child {
+    animation: gtSwitcherPulse 2s ease-in-out;
+}
+
+/* Tablet devices (768px - 1024px) */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .gt_switcher_wrapper {
+        bottom: 25px !important;
+        left: 15px !important;
+    }
+
+    /* Collapsed state on tablet - slide to edge, show only flag */
+    .gt_switcher_wrapper.gt-collapsed {
+        transform: translateX(-88%) !important;
+    }
+
+    .gt_switcher_wrapper.gt-collapsed a.gt-current-lang {
+        min-width: 46px !important;
+        padding: 9px 9px !important;
+        justify-content: center !important;
+    }
+
+    .gt_switcher_wrapper a.glink {
+        padding: 9px 13px !important;
+        font-size: 0.82rem !important;
+        margin-bottom: 5px !important;
+    }
+
+    .gt_switcher_wrapper img {
+        width: 22px !important;
+        height: 16px !important;
+    }
+
+    .goog-te-gadget .goog-te-combo {
+        padding: 7px 9px !important;
+        font-size: 0.78rem !important;
+    }
+}
+
+/* Desktop narrow (1025px - 1470px) - Collapse enabled */
+@media (min-width: 1025px) and (max-width: 1470px) {
+    .gt_switcher_wrapper {
+        position: fixed !important;
+        bottom: 30px !important;
+        left: 20px !important;
+        z-index: 9999 !important;
+    }
+
+    /* Collapsed state on narrow desktop - slide to edge, show only flag */
+    .gt_switcher_wrapper.gt-collapsed {
+        transform: translateX(-90%) !important;
+        opacity: 1 !important;
+    }
+
+    .gt_switcher_wrapper.gt-collapsed a.gt-current-lang {
+        min-width: 48px !important;
+        padding: 10px 10px !important;
+        justify-content: center !important;
+    }
+
+    .gt_switcher_wrapper a.glink {
+        padding: 10px 14px !important;
+        font-size: 0.85rem !important;
+    }
+
+    .gt_switcher_wrapper img {
+        width: 24px !important;
+        height: 18px !important;
+    }
+
+    .goog-te-gadget .goog-te-combo {
+        padding: 8px 10px !important;
+        font-size: 0.8rem !important;
+    }
+}
+
+/* Mobile devices (481px - 768px) */
+@media (max-width: 768px) {
+    .gt_switcher_wrapper {
+        position: fixed !important;
+        bottom: 20px !important;
+        left: 12px !important;
+        z-index: 9999 !important;
+    }
+
+    /* Collapsed state on mobile - slide to edge, show only flag */
+    .gt_switcher_wrapper.gt-collapsed {
+        transform: translateX(-88%) !important;
+    }
+
+    .gt_switcher_wrapper.gt-collapsed a.gt-current-lang {
+        min-width: 48px !important;
+        padding: 10px 10px !important;
+        justify-content: center !important;
+    }
+
+    .gt_switcher_wrapper a.glink {
+        padding: 10px 12px !important;
+        font-size: 0.8rem !important;
+        min-height: 40px !important;
+        margin-bottom: 5px !important;
+    }
+
+    .gt_switcher_wrapper img {
+        width: 22px !important;
+        height: 16px !important;
+    }
+
+    .goog-te-gadget .goog-te-combo {
+        padding: 8px 10px !important;
+        font-size: 0.8rem !important;
+    }
+}
+
+/* Small mobile devices (320px - 480px) */
+@media (max-width: 480px) {
+    .gt_switcher_wrapper {
+        position: fixed !important;
+        bottom: 70px !important;
+        left: 10px !important;
+        z-index: 9999 !important;
+    }
+
+    /* Collapsed state - show only flag as edge indicator */
+    .gt_switcher_wrapper.gt-collapsed {
+        transform: translateX(-85%) !important;
+    }
+
+    .gt_switcher_wrapper.gt-collapsed a.gt-current-lang {
+        min-width: 44px !important;
+        padding: 10px 8px !important;
+        justify-content: center !important;
+    }
+
+    .gt_switcher_wrapper a.glink {
+        padding: 9px 11px !important;
+        font-size: 0.75rem !important;
+        gap: 6px !important;
+        min-height: 38px !important;
+        margin-bottom: 4px !important;
+    }
+
+    .gt_switcher_wrapper img {
+        width: 20px !important;
+        height: 14px !important;
+    }
+
+    .goog-te-gadget .goog-te-combo {
+        padding: 7px 9px !important;
+        font-size: 0.75rem !important;
+    }
+}
+
+/* iPhone SE and very small screens (max-width: 360px) */
+@media (max-width: 360px) {
+    .gt_switcher_wrapper {
+        bottom: 72px !important;
+        left: 8px !important;
+    }
+
+    .gt_switcher_wrapper a.glink {
+        padding: 8px 10px !important;
+        font-size: 0.7rem !important;
+    }
+
+    .gt_switcher_wrapper img {
+        width: 18px !important;
+        height: 13px !important;
+    }
+}
+
+/* Landscape mode on mobile - Move to top */
+@media (max-height: 500px) and (max-width: 768px) {
+    .gt_switcher_wrapper {
+        bottom: auto !important;
+        top: 10px !important;
+        left: 10px !important;
+    }
+
+    .gt_switcher_wrapper a.glink {
+        padding: 8px 10px !important;
+        font-size: 0.75rem !important;
+    }
+}
+
+/* Desktop wide (> 1470px) - Always fully visible, no collapse */
+@media (min-width: 1471px) {
+    .gt_switcher_wrapper {
+        opacity: 1 !important;
+        transform: translateX(0) !important;
+    }
+
+    .gt_switcher_wrapper.gt-collapsed {
+        transform: translateX(0) !important;
+        opacity: 1 !important;
+    }
+
+    .gt_switcher_wrapper.gt-collapsed a.glink:not(.gt-current-lang),
+    .gt_switcher_wrapper.gt-collapsed #google_translate_element2 {
+        display: flex !important;
+        list-style: flex !important;
+    }
+
+    .gt_switcher_wrapper.gt-collapsed a.gt-current-lang span {
+        display: block !important;
+    }
+}
+
+/* Remove default notranslate and glink link styling */
+a.notranslate {
+    /* Reset any inherited link styles */
+}
