@@ -258,6 +258,7 @@ h6 {
 
 .top-bar {
     overflow: hidden;
+    overflow-anchor: none;
     max-height: var(--top-bar-height, 80px);
     opacity: 1;
     visibility: visible;
@@ -291,6 +292,7 @@ h6 {
     position: sticky;
     top: 0;
     z-index: 1000;
+    overflow-anchor: none;
     box-shadow: 0 4px 20px var(--color-shadow-strong);
     overflow: visible;
     isolation: isolate;

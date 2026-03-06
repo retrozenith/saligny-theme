@@ -15,9 +15,15 @@ document.addEventListener('DOMContentLoaded', function () {
         siteHeader.style.setProperty('--top-bar-height', topBar.scrollHeight + 'px');
     }
 
+    var syncDebounceTimer;
+    function syncTopBarHeightDebounced() {
+        clearTimeout(syncDebounceTimer);
+        syncDebounceTimer = setTimeout(syncTopBarHeight, 100);
+    }
+
     syncTopBarHeight();
     window.addEventListener('load', syncTopBarHeight);
-    window.addEventListener('resize', syncTopBarHeight);
+    window.addEventListener('resize', syncTopBarHeightDebounced);
 
     // Desktop scroll behavior: hide top bar only after clear downward scroll,
     // show it back with a softer threshold when scrolling up.
