@@ -57,6 +57,21 @@
                     </p>
                 <?php endif; ?>
             </div>
+
+            <div class="top-bar-auth">
+                <?php if (is_user_logged_in()): ?>
+                    <a class="top-bar-auth-btn" href="<?php echo esc_url(admin_url()); ?>">
+                        <?php echo saligny_icon('user', '1rem'); ?>
+                        <?php esc_html_e('Panou Administrator', 'saligny-theme'); ?>
+                    </a>
+                <?php else: ?>
+                    <a class="top-bar-auth-btn" href="<?php echo esc_url(wp_login_url(home_url('/'))); ?>">
+                        <?php echo saligny_icon('user', '1rem'); ?>
+                        <?php esc_html_e('Autentificare', 'saligny-theme'); ?>
+                    </a>
+                <?php endif; ?>
+            </div>
+
         </div>
     </div>
     <div class="header-inner">
@@ -86,31 +101,75 @@ endif; ?>
             </div>
         </div>
 
+        <form role="search" method="get" class="header-search-form" action="<?php echo esc_url(home_url('/')); ?>">
+            <div class="header-search-wrapper">
+                <?php echo saligny_icon('search', '1.1rem'); ?>
+                <input type="search" class="header-search-field" placeholder="<?php esc_attr_e('Caută...', 'saligny-theme'); ?>" value="<?php echo get_search_query(); ?>" name="s">
+                <button type="submit" class="header-search-submit" aria-label="<?php esc_attr_e('Caută', 'saligny-theme'); ?>">
+                    <?php echo saligny_icon('search', '1.1rem'); ?>
+                </button>
+            </div>
+        </form>
+
+
         <button class="menu-toggle" id="menu-toggle" aria-label="<?php esc_attr_e('Meniu', 'saligny-theme'); ?>" aria-expanded="false">
             <span></span>
             <span></span>
             <span></span>
         </button>
-
-        <nav class="main-navigation" id="main-navigation" role="navigation" aria-label="<?php esc_attr_e('Navigare principală', 'saligny-theme'); ?>">
-            <div class="mobile-menu-header">
-                <span class="mobile-menu-title">Meniu</span>
-                <button class="menu-close" id="menu-close" aria-label="Închide meniul">
-                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-                </button>
-            </div>
-            <?php
-wp_nav_menu(array(
-    'theme_location' => 'primary',
-    'menu_class' => 'nav-menu',
-    'container' => false,
-    'fallback_cb' => 'saligny_fallback_menu',
-    'depth' => 3,
-));
-?>
-        </nav>
-        <div class="nav-overlay" id="nav-overlay"></div>
     </div>
+
+    <div class="bottom-navbar">
+        <div class="bottom-navbar-inner">
+            <nav class="main-navigation" id="main-navigation" role="navigation" aria-label="<?php esc_attr_e('Navigare principală', 'saligny-theme'); ?>">
+                <div class="mobile-menu-header">
+                    <span class="mobile-menu-title">
+                        <?php echo saligny_icon('school', '1.5rem'); ?>
+                        Meniu
+                    </span>
+                    <button class="menu-close" id="menu-close" aria-label="Închide meniul">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                    </button>
+                </div>
+
+                <div class="mobile-nav-tools">
+                    <form role="search" method="get" class="nav-search-form" action="<?php echo esc_url(home_url('/')); ?>">
+                        <div class="nav-search-wrapper">
+                            <?php echo saligny_icon('search', '1rem'); ?>
+                            <input type="search" class="nav-search-field" placeholder="<?php esc_attr_e('Caută...', 'saligny-theme'); ?>" value="<?php echo get_search_query(); ?>" name="s">
+                            <button type="submit" class="nav-search-submit"><?php esc_html_e('Caută', 'saligny-theme'); ?></button>
+                        </div>
+                    </form>
+
+                    <div class="mobile-auth-actions">
+                        <?php if (is_user_logged_in()): ?>
+                            <a class="mobile-auth-btn" href="<?php echo esc_url(admin_url()); ?>">
+                                <?php echo saligny_icon('user', '1rem'); ?>
+                                <?php esc_html_e('Panou Administrator', 'saligny-theme'); ?>
+                            </a>
+                        <?php else: ?>
+                            <a class="mobile-auth-btn" href="<?php echo esc_url(wp_login_url(home_url('/'))); ?>">
+                                <?php echo saligny_icon('user', '1rem'); ?>
+                                <?php esc_html_e('Autentificare', 'saligny-theme'); ?>
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <?php
+                wp_nav_menu(array(
+                    'theme_location' => 'primary',
+                    'menu_class' => 'nav-menu',
+                    'container' => false,
+                    'fallback_cb' => 'saligny_fallback_menu',
+                    'depth' => 3
+                ));
+                ?>
+            </nav>
+        </div>
+    </div>
+
+    <div class="nav-overlay" id="nav-overlay"></div>
 </header>
 
 <?php

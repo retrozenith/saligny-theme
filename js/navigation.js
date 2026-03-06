@@ -7,16 +7,43 @@ document.addEventListener('DOMContentLoaded', function () {
     var siteHeader = document.getElementById('site-header');
     var MOBILE_BREAKPOINT = 1024;
     var lastScrollY = window.pageYOffset;
+    var headerScrolled = false;
 
-    // Hide top bar only while scrolling down.
+    // Desktop scroll behavior: hide top bar only after clear downward scroll,
+    // show it back with a softer threshold when scrolling up.
     if (siteHeader) {
         window.addEventListener('scroll', function () {
             var currentScrollY = window.pageYOffset;
+            var delta = currentScrollY - lastScrollY;
+            var isDesktop = window.innerWidth > MOBILE_BREAKPOINT;
 
-            if (currentScrollY > lastScrollY && currentScrollY > 10) {
+            if (!isDesktop) {
+                if (headerScrolled) {
+                    siteHeader.classList.remove('scrolled');
+                    headerScrolled = false;
+                }
+                lastScrollY = currentScrollY;
+                return;
+            }
+
+            // Ignore tiny wheel/touchpad noise to avoid jitter.
+            if (Math.abs(delta) < 6) {
+                return;
+            }
+
+            if (delta > 0 && currentScrollY > 100 && !headerScrolled) {
                 siteHeader.classList.add('scrolled');
-            } else {
+                headerScrolled = true;
+            }
+
+            if (delta < 0 && headerScrolled) {
                 siteHeader.classList.remove('scrolled');
+                headerScrolled = false;
+            }
+
+            if (currentScrollY <= 20 && headerScrolled) {
+                siteHeader.classList.remove('scrolled');
+                headerScrolled = false;
             }
 
             lastScrollY = currentScrollY;

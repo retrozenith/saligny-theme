@@ -168,6 +168,48 @@ function saligny_get_category_posts($category_slug, $count = 5)
 }
 
 // ============================================
+// HELPER: Find content by exact title (WP 6.2+ safe)
+// ============================================
+function saligny_get_content_by_title($title, $post_type = 'page')
+{
+    $query = new WP_Query(array(
+        'post_type' => $post_type,
+        'post_status' => array('publish', 'draft', 'pending', 'private', 'future'),
+        'posts_per_page' => 1,
+        'title' => $title,
+        'orderby' => 'ID',
+        'order' => 'ASC',
+        'no_found_rows' => true,
+        'ignore_sticky_posts' => true,
+    ));
+
+    if (!empty($query->posts)) {
+        return $query->posts[0];
+    }
+
+    // Fallback by slug for environments where title query var is unreliable.
+    $slug = sanitize_title($title);
+    if ($slug !== '') {
+        $fallback = new WP_Query(array(
+            'post_type' => $post_type,
+            'post_status' => array('publish', 'draft', 'pending', 'private', 'future'),
+            'posts_per_page' => 1,
+            'name' => $slug,
+            'orderby' => 'ID',
+            'order' => 'ASC',
+            'no_found_rows' => true,
+            'ignore_sticky_posts' => true,
+        ));
+
+        if (!empty($fallback->posts)) {
+            return $fallback->posts[0];
+        }
+    }
+
+    return null;
+}
+
+// ============================================
 // HELPER: Default post thumbnail
 // ============================================
 function saligny_post_thumbnail($size = 'saligny-card-thumb')
@@ -207,7 +249,7 @@ function saligny_icon($name, $size = '1em')
         'home' => '<svg ' . $style . ' viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>',
         'facebook' => '<svg ' . $style . ' viewBox="0 0 24 24"><path d="M12 2.04C6.5 2.04 2 6.53 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.85C10.44 7.34 11.93 5.96 14.22 5.96C15.31 5.96 16.45 6.15 16.45 6.15V8.62H15.19C13.95 8.62 13.56 9.39 13.56 10.18V12.06H16.34L15.89 14.96H13.56V21.96A10 10 0 0 0 22 12.06C22 6.53 17.5 2.04 12 2.04Z"/></svg>',
         'instagram' => '<svg ' . $style . ' viewBox="0 0 24 24"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/></svg>',
-    );
+        'search' => '<svg ' . $style . ' viewBox="0 0 24 28" role="img" aria-label="Search"><circle cx="10" cy="10" r="6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="15.2" y1="15.2" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',        );
     return isset($icons[$name]) ? $icons[$name] : '';
 }
 
@@ -267,10 +309,40 @@ function saligny_theme_activation()
     // Don't delete it, just leave it
     }
 
+    $oferta_default_content = <<<'HTML'
+<h2>Oferta liceu</h2>
+<p>Oferta școlii noastre este una generoasă:</p>
+<ul>
+<li>Calificări diverse în filiera tehnologică, profil tehnic, domeniile: construcții, instalații și lucrări publice, mecanică și electric, resurse naturale și protecția mediului.</li>
+<li>Calificarea instructor sportiv, prin filiera vocațională, profil sportiv.</li>
+<li>Calificare prin școala profesională în meseria de sudor.</li>
+<li>Cursuri de pregătire prin școala postliceală în domeniul construcții, instalații și lucrări publice (tehnician urbanism și amenajarea teritoriului, tehnician devize și măsurători în construcții).</li>
+<li>Cursuri de calificare profesională pentru adulți în domeniile construcții și mecanică.</li>
+<li>Școala de maiștri pentru calificările Maistru instalator pentru construcții și Maistru electromecanic aparate de măsură și automatizări.</li>
+</ul>
+
+<h3>Structura claselor (an școlar 2014-2015)</h3>
+<p><strong>Liceu zi</strong>: IX (7 clase), X (6 clase), XI (6 clase), XII (7 clase).</p>
+<p><strong>Liceu seral</strong>: IX (1 clasă), X (2 clase), XI (2 clase), XII (2 clase), XIII (1 clasă).</p>
+<p><strong>Școala de maiștri</strong>: 3 clase (I Me, I Mi, II Me).</p>
+<p><strong>Școala profesională</strong>: 2 clase (Xs, XI s) - calificare Sudor.</p>
+<p><strong>Învățământ postliceal</strong>: 4 clase (I PL - 2, II PL - 2).</p>
+HTML;
+
     // Create pages
     $pages = array(
-        'Despre Noi' => 'Colegiul Tehnic Anghel Saligny Bucuresti este o instituție de învățământ cu tradiție, oferind specializări tehnice și vocaționale de înaltă calitate.',
-        'Istoricul Școlii' => 'Colegiul Tehnic „Anghel Saligny" din București are o istorie bogată, fiind una dintre cele mai vechi și prestigioase instituții de învățământ tehnic din România.',
+        'Profesori' => 'Corpul profesoral al Colegiului Tehnic "Anghel Saligny" este format din cadre didactice cu experiență și dedicare către educația tinerilor.',
+        'Elevi' => 'Informații utile pentru elevii Colegiului Tehnic "Anghel Saligny".',
+        'Părinți' => 'Informații și resurse pentru părinții elevilor noștri.',
+        'Oferta educațională' => $oferta_default_content,
+        'Examene' => 'Calendarul examenelor și informații despre evaluările naționale și internaționale.',
+        'Proiecte și programe' => 'Colegiul nostru participă la numeroase proiecte și programe educaționale, atât la nivel național, cât și internațional.',
+        'Învățământ profesional dual' => 'Programul de învățământ profesional dual combină pregătirea teoretică cu experiența practică în companii partenere.',
+        'Erasmus' => 'Proiectele Erasmus+ oferă elevilor și cadrelor didactice oportunități de mobilitate și învățare în țări europene.',
+        'Programul Educație și Ocupare 2021-2027 (PEO)' => 'Informații despre Programul Educație și Ocupare 2021-2027, finanțat prin fonduri europene.',
+        'OLIMPIADĂ' => 'Rezultatele și informațiile despre participarea elevilor noștri la olimpiadele școlare.',
+        'Despre Noi' => 'Colegiul Tehnic "Anghel Saligny" Bucuresti este o instituție de învățământ cu tradiție, oferind specializări tehnice și vocaționale de înaltă calitate.',
+        'Istoricul Școlii' => 'Colegiul Tehnic "Anghel Saligny" din București are o istorie bogată, fiind una dintre cele mai vechi și prestigioase instituții de învățământ tehnic din România.',
         'Inginerul Anghel Saligny' => 'Anghel Saligny (1854-1925) a fost un inginer român, considerat unul dintre cei mai mari ingineri constructori din istoria României.',
         'Misiune si Viziune' => 'Misiunea noastră este de a forma specialiști competenți în domeniul tehnic, capabili să răspundă cerințelor pieței muncii.',
         'Educatie' => 'Oferta noastră educațională cuprinde filiera tehnologică și filiera vocațională, cu multiple specializări.',
@@ -279,12 +351,12 @@ function saligny_theme_activation()
         'Baza Materiala' => 'Colegiul dispune de laboratoare moderne, ateliere echipate și săli de clasă confortabile.',
         'Contact' => '<h3>Adresa</h3><p>Str. Ing. Zablovschi nr. 4, Sector 3, 031534 București</p><h3>Telefon</h3><p>021 323 8035</p><h3>Email</h3><p>anghel_saligny@yahoo.com</p>',
         'Secretariat ONLINE' => 'Pentru orice informare, va rugam sa va adresati serviciului secretariat in mediul on-line pe mail-ul unitatii: anghel_saligny@yahoo.com',
-        'Management' => 'Echipa de conducere a Colegiului Tehnic Anghel Saligny.',
+        'Management' => 'Echipa de conducere a Colegiului Tehnic "Anghel Saligny".',
         'Transparenta Institutionala' => 'Informații publice conform Legii nr. 544/2001 privind liberul acces la informațiile de interes public.',
     );
 
     foreach ($pages as $title => $content) {
-        $existing = get_page_by_title($title, OBJECT, 'page');
+        $existing = saligny_get_content_by_title($title, 'page');
         if (!$existing) {
             wp_insert_post(array(
                 'post_title' => $title,
@@ -299,8 +371,8 @@ function saligny_theme_activation()
     // Create sample posts
     $sample_posts = array(
             array(
-            'title' => 'Bine ați venit pe noul site al Colegiului Tehnic Anghel Saligny!',
-            'content' => 'Suntem bucuroși să vă prezentăm noul website al Colegiului Tehnic Anghel Saligny Bucuresti. Aici veți găsi toate informațiile necesare despre oferta noastră educațională, activitățile desfășurate și proiectele școlii.',
+            'title' => 'Bine ați venit pe noul site al Colegiului Tehnic "Anghel Saligny"!',
+            'content' => 'Suntem bucuroși să vă prezentăm noul website al Colegiului Tehnic "Anghel Saligny" Bucuresti. Aici veți găsi toate informațiile necesare despre oferta noastră educațională, activitățile desfășurate și proiectele școlii.',
             'category' => 'noutati',
         ),
             array(
@@ -310,12 +382,12 @@ function saligny_theme_activation()
         ),
             array(
             'title' => 'De la formare profesională la performanță internațională',
-            'content' => 'În perioada 2–6 decembrie 2025, Colegiul Tehnic „Anghel Saligny" din București a participat, în calitate de invitat internațional, la competiția WorldSkills Polonia – Gdansk 2025. Elevii noștri au reprezentat România cu mândrie și profesionalism.',
+            'content' => 'În perioada 2–6 decembrie 2025, Colegiul Tehnic "Anghel Saligny" din București a participat, în calitate de invitat internațional, la competiția WorldSkills Polonia – Gdansk 2025. Elevii noștri au reprezentat România cu mândrie și profesionalism.',
             'category' => 'activitati',
         ),
             array(
             'title' => 'Performanță remarcabilă la competiția națională WorldSkills România',
-            'content' => 'În data de 22 mai 2025, Colegiul Tehnic „Anghel Saligny" a fost reprezentat cu succes la prima ediție a competiției WorldSkills România, Secțiunea Instalatori.',
+            'content' => 'În data de 22 mai 2025, Colegiul Tehnic "Anghel Saligny" a fost reprezentat cu succes la prima ediție a competiției WorldSkills România, Secțiunea Instalatori.',
             'category' => 'activitati',
         ),
             array(
@@ -325,13 +397,13 @@ function saligny_theme_activation()
         ),
             array(
             'title' => 'Activități Erasmus+ - European Internship for Compensation Systems',
-            'content' => 'Colegiul a participat cu succes la proiectul Erasmus+ „European Internship for Compensation Systems" derulat în Turcia, în luna iunie 2023.',
+            'content' => 'Colegiul a participat cu succes la proiectul Erasmus+ "European Internship for Compensation Systems" derulat în Turcia, în luna iunie 2023.',
             'category' => 'proiecte',
         ),
     );
 
     foreach ($sample_posts as $post_data) {
-        $existing = get_page_by_title($post_data['title'], OBJECT, 'post');
+        $existing = saligny_get_content_by_title($post_data['title'], 'post');
         if (!$existing) {
             $cat = get_category_by_slug($post_data['category']);
             wp_insert_post(array(
@@ -353,73 +425,166 @@ function saligny_theme_activation()
         $menu_id = wp_create_nav_menu($menu_name);
 
         if (!is_wp_error($menu_id)) {
-            // Despre Noi
-            $despre_noi_page = get_page_by_title('Despre Noi', OBJECT, 'page');
-            $despre_id = wp_update_nav_menu_item($menu_id, 0, array(
-                'menu-item-title' => 'Despre Noi',
-                'menu-item-object-id' => $despre_noi_page ? $despre_noi_page->ID : 0,
+            // Pagina principală
+            wp_update_nav_menu_item($menu_id, 0, array(
+                'menu-item-title' => 'Pagina principală',
+                'menu-item-url' => home_url('/'),
+                'menu-item-type' => 'custom',
+                'menu-item-status' => 'publish',
+            ));
+
+            // Noutăți (News category)
+            $noutati_cat = get_category_by_slug('noutati');
+            wp_update_nav_menu_item($menu_id, 0, array(
+                'menu-item-title' => 'Noutăți',
+                'menu-item-url' => $noutati_cat ? get_category_link($noutati_cat->term_id) : home_url('/category/noutati/'),
+                'menu-item-type' => 'custom',
+                'menu-item-status' => 'publish',
+            ));
+
+            // Profesori
+            $profesori_page = saligny_get_content_by_title('Profesori', 'page');
+            wp_update_nav_menu_item($menu_id, 0, array(
+                'menu-item-title' => 'Profesori',
+                'menu-item-object-id' => $profesori_page ? $profesori_page->ID : 0,
                 'menu-item-object' => 'page',
-                'menu-item-type' => $despre_noi_page ? 'post_type' : 'custom',
-                'menu-item-url' => $despre_noi_page ? '' : home_url('/'),
+                'menu-item-type' => $profesori_page ? 'post_type' : 'custom',
+                'menu-item-url' => $profesori_page ? '' : home_url('/'),
                 'menu-item-status' => 'publish',
             ));
 
-            // Sub-items for Despre Noi
-            $sub_pages = array('Istoricul Școlii', 'Inginerul Anghel Saligny', 'Misiune si Viziune', 'Educatie', 'Baza Materiala', 'Management', 'Transparenta Institutionala');
-            foreach ($sub_pages as $sub_title) {
-                $sub_page = get_page_by_title($sub_title, OBJECT, 'page');
-                if ($sub_page) {
-                    wp_update_nav_menu_item($menu_id, 0, array(
-                        'menu-item-title' => $sub_title,
-                        'menu-item-object-id' => $sub_page->ID,
-                        'menu-item-object' => 'page',
-                        'menu-item-type' => 'post_type',
-                        'menu-item-status' => 'publish',
-                        'menu-item-parent-id' => $despre_id,
-                    ));
-                }
-            }
-
-            // Proiecte (category link)
-            $proiecte_cat = get_category_by_slug('proiecte');
+            // Elevi
+            $elevi_page = saligny_get_content_by_title('Elevi', 'page');
             wp_update_nav_menu_item($menu_id, 0, array(
-                'menu-item-title' => 'Proiecte',
-                'menu-item-url' => $proiecte_cat ? get_category_link($proiecte_cat->term_id) : home_url('/category/proiecte/'),
-                'menu-item-type' => 'custom',
-                'menu-item-status' => 'publish',
-            ));
-
-            // Activitati
-            $activitati_cat = get_category_by_slug('activitati');
-            wp_update_nav_menu_item($menu_id, 0, array(
-                'menu-item-title' => 'Activitati',
-                'menu-item-url' => $activitati_cat ? get_category_link($activitati_cat->term_id) : home_url('/category/activitati/'),
-                'menu-item-type' => 'custom',
-                'menu-item-status' => 'publish',
-            ));
-
-            // Reviste
-            $reviste_cat = get_category_by_slug('reviste');
-            wp_update_nav_menu_item($menu_id, 0, array(
-                'menu-item-title' => 'Reviste',
-                'menu-item-url' => $reviste_cat ? get_category_link($reviste_cat->term_id) : home_url('/category/reviste/'),
-                'menu-item-type' => 'custom',
-                'menu-item-status' => 'publish',
-            ));
-
-            // Secretariat
-            $secretariat_page = get_page_by_title('Secretariat ONLINE', OBJECT, 'page');
-            wp_update_nav_menu_item($menu_id, 0, array(
-                'menu-item-title' => 'Secretariat',
-                'menu-item-object-id' => $secretariat_page ? $secretariat_page->ID : 0,
+                'menu-item-title' => 'Elevi',
+                'menu-item-object-id' => $elevi_page ? $elevi_page->ID : 0,
                 'menu-item-object' => 'page',
-                'menu-item-type' => $secretariat_page ? 'post_type' : 'custom',
-                'menu-item-url' => $secretariat_page ? '' : home_url('/'),
+                'menu-item-type' => $elevi_page ? 'post_type' : 'custom',
+                'menu-item-url' => $elevi_page ? '' : home_url('/'),
+                'menu-item-status' => 'publish',
+            ));
+
+            // Părinți
+            $parinti_page = saligny_get_content_by_title('Părinți', 'page');
+            wp_update_nav_menu_item($menu_id, 0, array(
+                'menu-item-title' => 'Părinți',
+                'menu-item-object-id' => $parinti_page ? $parinti_page->ID : 0,
+                'menu-item-object' => 'page',
+                'menu-item-type' => $parinti_page ? 'post_type' : 'custom',
+                'menu-item-url' => $parinti_page ? '' : home_url('/'),
+                'menu-item-status' => 'publish',
+            ));
+
+            // Oferta educațională
+            $oferta_page = saligny_get_content_by_title('Oferta educațională', 'page');
+            wp_update_nav_menu_item($menu_id, 0, array(
+                'menu-item-title' => 'Oferta educațională',
+                'menu-item-object-id' => $oferta_page ? $oferta_page->ID : 0,
+                'menu-item-object' => 'page',
+                'menu-item-type' => $oferta_page ? 'post_type' : 'custom',
+                'menu-item-url' => $oferta_page ? '' : home_url('/'),
+                'menu-item-status' => 'publish',
+            ));
+
+            // Examene
+            $examene_page = saligny_get_content_by_title('Examene', 'page');
+            wp_update_nav_menu_item($menu_id, 0, array(
+                'menu-item-title' => 'Examene',
+                'menu-item-object-id' => $examene_page ? $examene_page->ID : 0,
+                'menu-item-object' => 'page',
+                'menu-item-type' => $examene_page ? 'post_type' : 'custom',
+                'menu-item-url' => $examene_page ? '' : home_url('/'),
+                'menu-item-status' => 'publish',
+            ));
+
+            // Proiecte și programe (parent)
+            $proiecte_page = saligny_get_content_by_title('Proiecte și programe', 'page');
+            $proiecte_id = wp_update_nav_menu_item($menu_id, 0, array(
+                'menu-item-title' => 'Proiecte și programe',
+                'menu-item-object-id' => $proiecte_page ? $proiecte_page->ID : 0,
+                'menu-item-object' => 'page',
+                'menu-item-type' => $proiecte_page ? 'post_type' : 'custom',
+                'menu-item-url' => $proiecte_page ? '' : home_url('/'),
+                'menu-item-status' => 'publish',
+            ));
+
+            // Învățământ profesional dual (sub-item of Proiecte)
+            $dual_page = saligny_get_content_by_title('Învățământ profesional dual', 'page');
+            wp_update_nav_menu_item($menu_id, 0, array(
+                'menu-item-title' => 'Învățământ profesional dual',
+                'menu-item-object-id' => $dual_page ? $dual_page->ID : 0,
+                'menu-item-object' => 'page',
+                'menu-item-type' => $dual_page ? 'post_type' : 'custom',
+                'menu-item-url' => $dual_page ? '' : home_url('/'),
+                'menu-item-status' => 'publish',
+                'menu-item-parent-id' => $proiecte_id,
+            ));
+
+            // Erasmus (sub-item of Proiecte)
+            $erasmus_page = saligny_get_content_by_title('Erasmus', 'page');
+            wp_update_nav_menu_item($menu_id, 0, array(
+                'menu-item-title' => 'Erasmus',
+                'menu-item-object-id' => $erasmus_page ? $erasmus_page->ID : 0,
+                'menu-item-object' => 'page',
+                'menu-item-type' => $erasmus_page ? 'post_type' : 'custom',
+                'menu-item-url' => $erasmus_page ? '' : home_url('/'),
+                'menu-item-status' => 'publish',
+                'menu-item-parent-id' => $proiecte_id,
+            ));
+
+            // PEO (sub-item of Proiecte)
+            $peo_page = saligny_get_content_by_title('Programul Educație și Ocupare 2021-2027 (PEO)', 'page');
+            wp_update_nav_menu_item($menu_id, 0, array(
+                'menu-item-title' => 'Programul Educație și Ocupare 2021-2027 (PEO)',
+                'menu-item-object-id' => $peo_page ? $peo_page->ID : 0,
+                'menu-item-object' => 'page',
+                'menu-item-type' => $peo_page ? 'post_type' : 'custom',
+                'menu-item-url' => $peo_page ? '' : home_url('/'),
+                'menu-item-status' => 'publish',
+                'menu-item-parent-id' => $proiecte_id,
+            ));
+
+            // OLIMPIADĂ
+            $olimpiada_page = saligny_get_content_by_title('OLIMPIADĂ', 'page');
+            wp_update_nav_menu_item($menu_id, 0, array(
+                'menu-item-title' => 'OLIMPIADĂ',
+                'menu-item-object-id' => $olimpiada_page ? $olimpiada_page->ID : 0,
+                'menu-item-object' => 'page',
+                'menu-item-type' => $olimpiada_page ? 'post_type' : 'custom',
+                'menu-item-url' => $olimpiada_page ? '' : home_url('/'),
                 'menu-item-status' => 'publish',
             ));
 
             // Contact
-            $contact_page = get_page_by_title('Contact', OBJECT, 'page');
+                        // Despre Noi (moved to end)
+                        $despre_noi_page = saligny_get_content_by_title('Despre Noi', 'page');
+                        $despre_id = wp_update_nav_menu_item($menu_id, 0, array(
+                            'menu-item-title' => 'Despre Noi',
+                            'menu-item-object-id' => $despre_noi_page ? $despre_noi_page->ID : 0,
+                            'menu-item-object' => 'page',
+                            'menu-item-type' => $despre_noi_page ? 'post_type' : 'custom',
+                            'menu-item-url' => $despre_noi_page ? '' : home_url('/'),
+                            'menu-item-status' => 'publish',
+                        ));
+
+                        // Sub-items for Despre Noi
+                        $sub_pages = array('Istoricul Școlii', 'Inginerul Anghel Saligny', 'Misiune si Viziune', 'Management', 'Baza Materiala', 'Transparenta Institutionala');
+                        foreach ($sub_pages as $sub_title) {
+                            $sub_page = saligny_get_content_by_title($sub_title, 'page');
+                            if ($sub_page) {
+                                wp_update_nav_menu_item($menu_id, 0, array(
+                                    'menu-item-title' => $sub_title,
+                                    'menu-item-object-id' => $sub_page->ID,
+                                    'menu-item-object' => 'page',
+                                    'menu-item-type' => 'post_type',
+                                    'menu-item-status' => 'publish',
+                                    'menu-item-parent-id' => $despre_id,
+                                ));
+                            }
+                        }
+
+                        // Contact
+            $contact_page = saligny_get_content_by_title('Contact', 'page');
             wp_update_nav_menu_item($menu_id, 0, array(
                 'menu-item-title' => 'Contact',
                 'menu-item-object-id' => $contact_page ? $contact_page->ID : 0,
@@ -438,13 +603,305 @@ function saligny_theme_activation()
 
     // Set site tagline
     update_option('blogdescription', 'Învățăm să construim lumea așa cum o visăm. Împreună!');
-    update_option('blogname', 'Colegiul Tehnic Anghel Saligny Bucuresti');
+    update_option('blogname', 'Colegiul Tehnic "Anghel Saligny" Bucuresti');
+
+    // Safety net: ensure menu structure is complete even if menu already existed.
+    saligny_ensure_primary_menu_integrity();
 
     // Set permalink structure
     update_option('permalink_structure', '/%postname%/');
     flush_rewrite_rules();
 }
 add_action('after_switch_theme', 'saligny_theme_activation');
+
+// ============================================
+// MENU HEALTH CHECK: ensure required pages/menu items exist
+// ============================================
+function saligny_nav_required_pages()
+{
+    $oferta_default_content = <<<'HTML'
+<h2>Oferta liceu</h2>
+<p>Oferta școlii noastre este una generoasă:</p>
+<ul>
+<li>Calificări diverse în filiera tehnologică, profil tehnic, domeniile: construcții, instalații și lucrări publice, mecanică și electric, resurse naturale și protecția mediului.</li>
+<li>Calificarea instructor sportiv, prin filiera vocațională, profil sportiv.</li>
+<li>Calificare prin școala profesională în meseria de sudor.</li>
+<li>Cursuri de pregătire prin școala postliceală în domeniul construcții, instalații și lucrări publice (tehnician urbanism și amenajarea teritoriului, tehnician devize și măsurători în construcții).</li>
+<li>Cursuri de calificare profesională pentru adulți în domeniile construcții și mecanică.</li>
+<li>Școala de maiștri pentru calificările Maistru instalator pentru construcții și Maistru electromecanic aparate de măsură și automatizări.</li>
+</ul>
+
+<h3>Structura claselor (an școlar 2014-2015)</h3>
+<p><strong>Liceu zi</strong>: IX (7 clase), X (6 clase), XI (6 clase), XII (7 clase).</p>
+<p><strong>Liceu seral</strong>: IX (1 clasă), X (2 clase), XI (2 clase), XII (2 clase), XIII (1 clasă).</p>
+<p><strong>Școala de maiștri</strong>: 3 clase (I Me, I Mi, II Me).</p>
+<p><strong>Școala profesională</strong>: 2 clase (Xs, XI s) - calificare Sudor.</p>
+<p><strong>Învățământ postliceal</strong>: 4 clase (I PL - 2, II PL - 2).</p>
+HTML;
+
+    return array(
+        'Profesori' => 'Corpul profesoral al Colegiului Tehnic "Anghel Saligny" este format din cadre didactice cu experiență și dedicare către educația tinerilor.',
+        'Elevi' => 'Informații utile pentru elevii Colegiului Tehnic "Anghel Saligny".',
+        'Părinți' => 'Informații și resurse pentru părinții elevilor noștri.',
+        'Oferta educațională' => $oferta_default_content,
+        'Examene' => 'Calendarul examenelor și informații despre evaluările naționale și internaționale.',
+        'Proiecte și programe' => 'Colegiul nostru participă la numeroase proiecte și programe educaționale, atât la nivel național, cât și internațional.',
+        'Învățământ profesional dual' => 'Programul de învățământ profesional dual combină pregătirea teoretică cu experiența practică în companii partenere.',
+        'Erasmus' => 'Proiectele Erasmus+ oferă elevilor și cadrelor didactice oportunități de mobilitate și învățare în țări europene.',
+        'Programul Educație și Ocupare 2021-2027 (PEO)' => 'Informații despre Programul Educație și Ocupare 2021-2027, finanțat prin fonduri europene.',
+        'OLIMPIADĂ' => 'Rezultatele și informațiile despre participarea elevilor noștri la olimpiadele școlare.',
+        'Despre Noi' => 'Colegiul Tehnic "Anghel Saligny" Bucuresti este o instituție de învățământ cu tradiție, oferind specializări tehnice și vocaționale de înaltă calitate.',
+        'Istoricul Școlii' => 'Colegiul Tehnic "Anghel Saligny" din București are o istorie bogată, fiind una dintre cele mai vechi și prestigioase instituții de învățământ tehnic din România.',
+        'Inginerul Anghel Saligny' => 'Anghel Saligny (1854-1925) a fost un inginer român, considerat unul dintre cei mai mari ingineri constructori din istoria României.',
+        'Misiune si Viziune' => 'Misiunea noastră este de a forma specialiști competenți în domeniul tehnic, capabili să răspundă cerințelor pieței muncii.',
+        'Baza Materiala' => 'Colegiul dispune de laboratoare moderne, ateliere echipate și săli de clasă confortabile.',
+        'Management' => 'Echipa de conducere a Colegiului Tehnic "Anghel Saligny".',
+        'Transparenta Institutionala' => 'Informații publice conform Legii nr. 544/2001 privind liberul acces la informațiile de interes public.',
+        'Contact' => '<h3>Adresa</h3><p>Str. Ing. Zablovschi nr. 4, Sector 3, 031534 București</p><h3>Telefon</h3><p>021 323 8035</p><h3>Email</h3><p>anghel_saligny@yahoo.com</p>',
+    );
+}
+
+function saligny_nav_menu_blueprint()
+{
+    return array(
+        array('key' => 'home', 'title' => 'Pagina principală', 'type' => 'custom', 'url' => home_url('/')),
+        array('key' => 'noutati', 'title' => 'Noutăți', 'type' => 'category', 'slug' => 'noutati', 'fallback_url' => home_url('/category/noutati/')),
+        array('key' => 'profesori', 'title' => 'Profesori', 'type' => 'page'),
+        array('key' => 'elevi', 'title' => 'Elevi', 'type' => 'page'),
+        array('key' => 'parinti', 'title' => 'Părinți', 'type' => 'page'),
+        array('key' => 'oferta', 'title' => 'Oferta educațională', 'type' => 'page'),
+        array('key' => 'examene', 'title' => 'Examene', 'type' => 'page'),
+        array('key' => 'proiecte', 'title' => 'Proiecte și programe', 'type' => 'page'),
+        array('key' => 'dual', 'title' => 'Învățământ profesional dual', 'type' => 'page', 'parent_key' => 'proiecte'),
+        array('key' => 'erasmus', 'title' => 'Erasmus', 'type' => 'page', 'parent_key' => 'proiecte'),
+        array('key' => 'peo', 'title' => 'Programul Educație și Ocupare 2021-2027 (PEO)', 'type' => 'page', 'parent_key' => 'proiecte'),
+        array('key' => 'olimpiada', 'title' => 'OLIMPIADĂ', 'type' => 'page'),
+        array('key' => 'despre', 'title' => 'Despre Noi', 'type' => 'page'),
+        array('key' => 'istoric', 'title' => 'Istoricul Școlii', 'type' => 'page', 'parent_key' => 'despre'),
+        array('key' => 'saligny', 'title' => 'Inginerul Anghel Saligny', 'type' => 'page', 'parent_key' => 'despre'),
+        array('key' => 'misiune', 'title' => 'Misiune si Viziune', 'type' => 'page', 'parent_key' => 'despre'),
+        array('key' => 'management', 'title' => 'Management', 'type' => 'page', 'parent_key' => 'despre'),
+        array('key' => 'baza', 'title' => 'Baza Materiala', 'type' => 'page', 'parent_key' => 'despre'),
+        array('key' => 'transparenta', 'title' => 'Transparenta Institutionala', 'type' => 'page', 'parent_key' => 'despre'),
+        array('key' => 'contact', 'title' => 'Contact', 'type' => 'page'),
+    );
+}
+
+function saligny_lowercase_text($value)
+{
+    $value = trim((string) $value);
+    if ($value === '') {
+        return '';
+    }
+
+    if (function_exists('mb_strtolower')) {
+        return mb_strtolower($value);
+    }
+
+    return strtolower($value);
+}
+
+function saligny_ensure_primary_menu_integrity()
+{
+    if (!function_exists('wp_update_nav_menu_item')) {
+        return;
+    }
+
+    // 1) Ensure required pages exist.
+    $required_pages = saligny_nav_required_pages();
+    foreach ($required_pages as $title => $content) {
+        $existing_page = saligny_get_content_by_title($title, 'page');
+        if (!$existing_page) {
+            wp_insert_post(array(
+                'post_title' => $title,
+                'post_content' => $content,
+                'post_status' => 'publish',
+                'post_type' => 'page',
+                'post_author' => 1,
+            ));
+        }
+    }
+
+    // 2) Ensure menu exists.
+    $menu_name = 'Meniu Principal';
+    $menu_obj = wp_get_nav_menu_object($menu_name);
+    if (!$menu_obj) {
+        $new_menu_id = wp_create_nav_menu($menu_name);
+        if (is_wp_error($new_menu_id)) {
+            return;
+        }
+        $menu_obj = wp_get_nav_menu_object($new_menu_id);
+    }
+
+    if (!$menu_obj || empty($menu_obj->term_id)) {
+        return;
+    }
+
+    $menu_id = (int) $menu_obj->term_id;
+
+    // 3) Ensure menu is assigned to primary location.
+    $locations = get_theme_mod('nav_menu_locations', array());
+    if (!isset($locations['primary']) || (int) $locations['primary'] !== $menu_id) {
+        $locations['primary'] = $menu_id;
+        set_theme_mod('nav_menu_locations', $locations);
+    }
+
+    $existing_items = wp_get_nav_menu_items($menu_id);
+    $item_ids_by_key = array();
+
+    if (!empty($existing_items)) {
+        foreach ($existing_items as $existing_item) {
+            $normalized_title = saligny_lowercase_text($existing_item->title);
+            if ($normalized_title !== '') {
+                $item_ids_by_key[$normalized_title] = (int) $existing_item->ID;
+            }
+        }
+    }
+
+    // 4) Add missing menu items from blueprint.
+    $blueprint = saligny_nav_menu_blueprint();
+    $created_ids = array();
+
+    foreach ($blueprint as $node) {
+        $node_title_key = saligny_lowercase_text($node['title']);
+        if (isset($item_ids_by_key[$node_title_key])) {
+            $created_ids[$node['key']] = $item_ids_by_key[$node_title_key];
+            continue;
+        }
+
+        $menu_item_args = array(
+            'menu-item-title' => $node['title'],
+            'menu-item-status' => 'publish',
+        );
+
+        if (isset($node['parent_key']) && isset($created_ids[$node['parent_key']])) {
+            $menu_item_args['menu-item-parent-id'] = $created_ids[$node['parent_key']];
+        }
+
+        if ($node['type'] === 'page') {
+            $page = saligny_get_content_by_title($node['title'], 'page');
+            if ($page) {
+                $menu_item_args['menu-item-object-id'] = $page->ID;
+                $menu_item_args['menu-item-object'] = 'page';
+                $menu_item_args['menu-item-type'] = 'post_type';
+            } else {
+                $menu_item_args['menu-item-url'] = home_url('/');
+                $menu_item_args['menu-item-type'] = 'custom';
+            }
+        } elseif ($node['type'] === 'category') {
+            $category = get_category_by_slug($node['slug']);
+            $menu_item_args['menu-item-url'] = $category ? get_category_link($category->term_id) : $node['fallback_url'];
+            $menu_item_args['menu-item-type'] = 'custom';
+        } else {
+            $menu_item_args['menu-item-url'] = isset($node['url']) ? $node['url'] : home_url('/');
+            $menu_item_args['menu-item-type'] = 'custom';
+        }
+
+        $new_item_id = wp_update_nav_menu_item($menu_id, 0, $menu_item_args);
+        if (!is_wp_error($new_item_id) && $new_item_id) {
+            $created_ids[$node['key']] = (int) $new_item_id;
+        }
+    }
+
+    // 5) Always keep "Pagina principală" as first top-level item.
+    saligny_force_home_first_in_menu($menu_id);
+}
+
+function saligny_force_home_first_in_menu($menu_id)
+{
+    $items = wp_get_nav_menu_items($menu_id);
+    if (empty($items)) {
+        return;
+    }
+
+    $home_item = null;
+    $top_level_items = array();
+    $home_url = untrailingslashit(home_url('/'));
+
+    foreach ($items as $item) {
+        if ((int) $item->menu_item_parent === 0) {
+            $top_level_items[] = $item;
+        }
+
+        $title = saligny_lowercase_text(wp_strip_all_tags($item->title));
+        $item_url = untrailingslashit((string) $item->url);
+        if ($title === 'pagina principală' || $item_url === $home_url) {
+            $home_item = $item;
+        }
+    }
+
+    if (!$home_item) {
+        return;
+    }
+
+    usort($top_level_items, function ($a, $b) {
+        return ((int) $a->menu_order) <=> ((int) $b->menu_order);
+    });
+
+    if (!empty($top_level_items) && (int) $top_level_items[0]->ID === (int) $home_item->ID && (int) $home_item->menu_item_parent === 0) {
+        return;
+    }
+
+    // Ensure homepage is top-level.
+    update_post_meta((int) $home_item->ID, '_menu_item_menu_item_parent', 0);
+
+    // Reorder top-level items with homepage first.
+    $order = 1;
+    wp_update_post(array(
+        'ID' => (int) $home_item->ID,
+        'menu_order' => $order,
+    ));
+    $order++;
+
+    foreach ($top_level_items as $item) {
+        if ((int) $item->ID === (int) $home_item->ID) {
+            continue;
+        }
+
+        wp_update_post(array(
+            'ID' => (int) $item->ID,
+            'menu_order' => $order,
+        ));
+        $order++;
+    }
+}
+
+function saligny_nav_health_check()
+{
+    if (!is_admin()) {
+        return;
+    }
+
+    if (defined('DOING_AJAX') && DOING_AJAX) {
+        return;
+    }
+
+    $last_check = (int) get_option('saligny_nav_health_last_check', 0);
+    $interval = 6 * HOUR_IN_SECONDS;
+
+    if (($last_check + $interval) > time()) {
+        return;
+    }
+
+    saligny_ensure_primary_menu_integrity();
+    update_option('saligny_nav_health_last_check', time());
+}
+add_action('admin_init', 'saligny_nav_health_check');
+
+function saligny_force_home_first_after_menu_save($menu_id)
+{
+    $menu_obj = wp_get_nav_menu_object($menu_id);
+    if (!$menu_obj || empty($menu_obj->name)) {
+        return;
+    }
+
+    if ($menu_obj->name !== 'Meniu Principal') {
+        return;
+    }
+
+    saligny_force_home_first_in_menu((int) $menu_id);
+}
+add_action('wp_update_nav_menu', 'saligny_force_home_first_after_menu_save');
 
 // ============================================
 // BODY CLASSES

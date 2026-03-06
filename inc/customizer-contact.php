@@ -80,5 +80,6 @@ function saligny_contact_customizer_register($wp_customize)
         'sanitize_callback' => 'sanitize_text_field',
     ));
     $wp_customize->add_control('contact_schedule_weekend', array('label' => __('Sâmbătă – Duminică', 'saligny-theme'), 'section' => 'saligny_contact_schedule', 'type' => 'text'));
+
 }
 add_action('customize_register', 'saligny_contact_customizer_register');

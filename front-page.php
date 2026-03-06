@@ -15,8 +15,15 @@ get_header();
             <!-- MAIN HERO SECTION -->
             <section class="hero-main">
                 <div class="hero-main__content">
-                    <span class="hero-main__badge"><?php echo esc_html(get_theme_mod('front_hero_badge', 'Din 1959')); ?></span>
-                    <h1 class="hero-main__title"><?php echo wp_kses_post(get_theme_mod('front_hero_title', '65 de ani de<br><span>Excelență Tehnică</span>')); ?></h1>
+                    <?php
+                    $founding_year = 1966;
+                    $current_year = (int) current_time('Y');
+                    $years_of_experience = max(0, $current_year - $founding_year);
+                    $default_badge = 'Din ' . $founding_year;
+                    $default_title = $years_of_experience . ' de ani de<br><span>Excelență Tehnică</span>';
+                    ?>
+                    <span class="hero-main__badge"><?php echo esc_html(get_theme_mod('front_hero_badge', $default_badge)); ?></span>
+                    <h1 class="hero-main__title"><?php echo wp_kses_post(get_theme_mod('front_hero_title', $default_title)); ?></h1>
                     <p class="hero-main__description"><?php echo esc_html(get_theme_mod('front_hero_desc', 'Pregătim generațiile viitorului printr-o educație practică, inovatoare și adaptată cerințelor pieței muncii moderne.')); ?></p>
                     
                     <div class="hero-main__actions">
@@ -54,52 +61,54 @@ endfor; ?>
             <!-- HERO SLIDER -->
             <div class="hero-slider" id="hero-slider">
                 <?php
-$slider_posts = get_posts(array(
-    'posts_per_page' => 5,
-    'post_status' => 'publish',
-    'orderby' => 'date',
-    'order' => 'DESC',
-    'meta_query' => array(
-            array(
-            'key' => '_thumbnail_id',
-            'compare' => 'EXISTS',
-        ),
-    ),
-));
+                $slider_posts = get_posts(array(
+                    'posts_per_page' => 5,
+                    'post_status' => 'publish',
+                    'orderby' => 'date',
+                    'order' => 'DESC',
+                    'meta_query' => array(
+                        array(
+                            'key' => '_thumbnail_id',
+                            'compare' => 'EXISTS',
+                        ),
+                    ),
+                ));
 
-// If no posts with thumbnails, get latest posts regardless
-if (empty($slider_posts)) {
-    $slider_posts = get_posts(array(
-        'posts_per_page' => 4,
-        'post_status' => 'publish',
-    ));
-}
+                if (empty($slider_posts)) {
+                    $slider_posts = get_posts(array(
+                        'posts_per_page' => 4,
+                        'post_status' => 'publish',
+                    ));
+                }
 
-$i = 0;
-global $post;
-foreach ($slider_posts as $post):
-    setup_postdata($post);
-?>
+                global $post;
+                foreach ($slider_posts as $post) {
+                    setup_postdata($post);
+                }
+                wp_reset_postdata();
+
+                $i = 0;
+                foreach ($slider_posts as $post):
+                    setup_postdata($post);
+                ?>
                     <a href="<?php the_permalink(); ?>" class="slide <?php echo $i === 0 ? 'active' : ''; ?>" style="display:block;color:inherit;text-decoration:none;">
                         <?php if (has_post_thumbnail($post->ID)): ?>
                             <?php echo get_the_post_thumbnail($post->ID, 'saligny-slider'); ?>
-                        <?php
-    else: ?>
+                        <?php else: ?>
                             <div style="width:100%;height:100%;background:linear-gradient(135deg, #1a3a5c <?php echo($i * 20); ?>%, #2a5a8c <?php echo 50 + $i * 10; ?>%, #c8a84e 100%);display:flex;align-items:center;justify-content:center;">
                                 <span style="color:white;font-size:3rem;opacity:0.3;"><?php echo saligny_icon('school', '3rem'); ?></span>
                             </div>
-                        <?php
-    endif; ?>
+                        <?php endif; ?>
                         <div class="slide-overlay">
                             <div class="slide-title"><?php echo esc_html($post->post_title); ?></div>
                             <div class="slide-caption"><?php echo wp_trim_words($post->post_content, 15); ?></div>
                         </div>
                     </a>
                 <?php
-    $i++;
-endforeach;
-wp_reset_postdata();
-?>
+                    $i++;
+                endforeach;
+                wp_reset_postdata();
+                ?>
 
                 <button class="slider-nav slider-prev" aria-label="Anterior">‹</button>
                 <button class="slider-nav slider-next" aria-label="Următorul">›</button>

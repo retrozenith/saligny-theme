@@ -87,12 +87,25 @@ function saligny_history_customizer_register($wp_customize)
     ));
 
     $wp_customize->add_setting('history_offer_text', array(
-        'default' => 'Colegiul oferă o gamă largă de calificări în domeniile <strong>construcții, instalații și lucrări publice, mecanică și electric</strong>, precum și pregătire pentru <strong>instructor sportiv</strong> prin filiera vocațională.
+        'default' => '<h3>Oferta școlii noastre este una generoasă:</h3>
+<ul>
+<li>Calificări diverse în filiera tehnologică, profil tehnic, domeniile: construcții, instalații și lucrări publice, mecanică și electric, resurse naturale și protecția mediului.</li>
+<li>Calificarea instructor sportiv, prin filiera vocațională, profil sportiv.</li>
+<li>Calificare prin școala profesională în meseria de sudor.</li>
+<li>Cursuri de pregătire prin școala postliceală în domeniul construcții, instalații și lucrări publice cu calificările tehnician urbanism și amenajarea teritoriului și tehnician devize și măsurători în construcții.</li>
+<li>Cursuri de calificare profesională pentru adulți în calificări din domeniile construcții și mecanică, școala fiind autorizată CNFPA pentru programe de formare continuă.</li>
+<li>Școala de maiștri, pentru calificările Maistru instalator pentru construcții și Maistru electromecanic aparate de măsură și automatizări.</li>
+</ul>
 
-De asemenea, unitatea școlarizează adulți prin programe de formare profesională autorizate ANC și prin Școala de Maiștri, în specializările maistru instalator pentru construcții și maistru electromecanic aparate de măsură și automatizări.
+<h3>Structura claselor (an școlar 2014-2015)</h3>
+<p><strong>Liceu zi</strong>: IX - 7 clase, X - 6 clase, XI - 6 clase, XII - 7 clase.</p>
+<p><strong>Liceu seral</strong>: IX - 1 clasă, X - 2 clase, XI - 2 clase, XII - 2 clase, XIII - 1 clasă.</p>
+<p><strong>Școala de maiștri</strong>: I Me - 1 clasă, I Mi - 1 clasă, II Me - 1 clasă.</p>
+<p><strong>Școala profesională</strong>: Xs - 1 clasă, XI s - 1 clasă (calificare Sudor).</p>
+<p><strong>Învățământ postliceal</strong>: I PL - 2 clase, II PL - 2 clase.</p>
 
 <hr class="separator">
-Elevii provin atât din municipiul București, cât și din județele Ilfov, Giurgiu și Teleorman, având posibilitatea de cazare în căminul școlii în condiții civilizate și la prețuri accesibile.',
+<p>Calificările acoperă trasee educaționale complete: liceu tehnologic și vocațional, profesional, postliceal, formare adulți și școală de maiștri.</p>',
         'sanitize_callback' => 'wp_kses_post',
     ));
     $wp_customize->add_control('history_offer_text', array(
