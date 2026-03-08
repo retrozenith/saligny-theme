@@ -4,7 +4,8 @@ Theme URI: https://www.anghel-saligny.info.ro/
 Author: Cristea Florian Victor <florianvictorcristea@gmail.com>
 Description: Custom theme for Colegiul Tehnic Anghel Saligny Bucuresti - a modern, professional educational institution website.
 Version: 1.0.0
-License: Non-Commercial Use Only – see LICENSE file
+License: MIT-Style License – Modified Version (Non-Commercial Use Only)
+License URI: https://github.com/retrozenith
 Text Domain: saligny-theme
 */
 
@@ -726,24 +727,34 @@ h6 {
 }
 
 @keyframes heroMainBgA {
-    0%, 44% {
+
+    0%,
+    44% {
         opacity: 1;
     }
-    50%, 94% {
+
+    50%,
+    94% {
         opacity: 0;
     }
+
     100% {
         opacity: 1;
     }
 }
 
 @keyframes heroMainBgB {
-    0%, 44% {
+
+    0%,
+    44% {
         opacity: 0;
     }
-    50%, 94% {
+
+    50%,
+    94% {
         opacity: 1;
     }
+
     100% {
         opacity: 0;
     }
