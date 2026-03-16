@@ -7,6 +7,12 @@
 # it's behind a Cloudflare Tunnel or any reverse proxy that 
 # terminates SSL and forwards requests to the backend
 
+#!!! Warning: must add a2enmod module to apache2
+# # Enable the rewrite module
+# a2enmod rewrite
+# # Restart Apache to apply changes
+# service apache2 restart
+
 # ------------------------------------------------------------
 # 1. Tell Apache/PHP that the connection is HTTPS when the
 #    request arrives through Cloudflare Tunnel or any reverse
