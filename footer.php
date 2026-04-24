@@ -8,10 +8,10 @@ else: ?>
                     <h3>Postări Recente</h3>
                     <ul>
                         <?php
-    $recent_posts = wp_get_recent_posts(array('numberposts' => 5, 'post_status' => 'publish'));
-    foreach ($recent_posts as $post):
+    $recent_posts = get_posts(array('numberposts' => 5, 'post_status' => 'publish'));
+    foreach ($recent_posts as $recent_post):
 ?>
-                            <li><a href="<?php echo esc_url(get_permalink($post['ID'])); ?>"><?php echo esc_html($post['post_title']); ?></a></li>
+                            <li><a href="<?php echo esc_url(get_permalink($recent_post->ID)); ?>"><?php echo esc_html($recent_post->post_title); ?></a></li>
                         <?php
     endforeach;
     wp_reset_postdata(); ?>

@@ -81,27 +81,21 @@ endfor; ?>
                     ));
                 }
 
-                global $post;
-                foreach ($slider_posts as $post) {
-                    setup_postdata($post);
-                }
-                wp_reset_postdata();
-
                 $i = 0;
-                foreach ($slider_posts as $post):
-                    setup_postdata($post);
+                foreach ($slider_posts as $slide_post):
+                    setup_postdata($slide_post);
                 ?>
-                    <a href="<?php the_permalink(); ?>" class="slide <?php echo $i === 0 ? 'active' : ''; ?>" style="display:block;color:inherit;text-decoration:none;">
-                        <?php if (has_post_thumbnail($post->ID)): ?>
-                            <?php echo get_the_post_thumbnail($post->ID, 'saligny-slider'); ?>
+                    <a href="<?php echo esc_url(get_permalink($slide_post->ID)); ?>" class="slide <?php echo $i === 0 ? 'active' : ''; ?>" style="display:block;color:inherit;text-decoration:none;">
+                        <?php if (has_post_thumbnail($slide_post->ID)): ?>
+                            <?php echo get_the_post_thumbnail($slide_post->ID, 'saligny-slider'); ?>
                         <?php else: ?>
-                            <div style="width:100%;height:100%;background:linear-gradient(135deg, #1a3a5c <?php echo($i * 20); ?>%, #2a5a8c <?php echo 50 + $i * 10; ?>%, #c8a84e 100%);display:flex;align-items:center;justify-content:center;">
+                            <div style="width:100%;height:100%;background:linear-gradient(135deg, var(--color-primary-dark) <?php echo($i * 20); ?>%, var(--color-primary) <?php echo 50 + $i * 10; ?>%, #c8a84e 100%);display:flex;align-items:center;justify-content:center;">
                                 <span style="color:white;font-size:3rem;opacity:0.3;"><?php echo saligny_icon('school', '3rem'); ?></span>
                             </div>
                         <?php endif; ?>
                         <div class="slide-overlay">
-                            <div class="slide-title"><?php echo esc_html($post->post_title); ?></div>
-                            <div class="slide-caption"><?php echo wp_trim_words($post->post_content, 15); ?></div>
+                            <div class="slide-title"><?php echo esc_html($slide_post->post_title); ?></div>
+                            <div class="slide-caption"><?php echo wp_trim_words(wp_strip_all_tags(apply_filters('the_content', $slide_post->post_content)), 15); ?></div>
                         </div>
                     </a>
                 <?php
@@ -169,9 +163,8 @@ for ($i = 1; $i <= 3; $i++) {
                             </div>
                             <div class="category-posts">
                                 <?php
-            global $post;
-            foreach ($cat_posts as $post):
-                setup_postdata($post);
+            foreach ($cat_posts as $cat_post):
+                setup_postdata($cat_post);
 ?>
                                     <article class="post-card">
                                         <div class="post-card__thumb">
@@ -179,12 +172,12 @@ for ($i = 1; $i <= 3; $i++) {
                                         </div>
                                         <div class="post-card__content">
                                             <h3 class="post-card__title">
-                                                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                                                <a href="<?php echo esc_url(get_permalink($cat_post->ID)); ?>"><?php echo esc_html($cat_post->post_title); ?></a>
                                             </h3>
                                             <div class="post-card__meta">
-                                                <?php echo saligny_icon('calendar'); ?> <?php echo get_the_date('M j, Y'); ?>
+                                                <?php echo saligny_icon('calendar'); ?> <?php echo get_the_date('M j, Y', $cat_post->ID); ?>
                                             </div>
-                                            <p class="post-card__excerpt"><?php echo wp_trim_words(get_the_content(), 25); ?></p>
+                                            <p class="post-card__excerpt"><?php echo wp_trim_words(get_the_excerpt(), 25); ?></p>
                                         </div>
                                     </article>
                                 <?php
@@ -209,9 +202,8 @@ if (!$any_posts_found):
                 <div class="category-posts">
                     <?php
     $latest = get_posts(array('posts_per_page' => 5, 'post_status' => 'publish'));
-    global $post;
-    foreach ($latest as $post):
-        setup_postdata($post);
+    foreach ($latest as $latest_post):
+        setup_postdata($latest_post);
 ?>
                         <article class="post-card">
                             <div class="post-card__thumb">
@@ -219,12 +211,12 @@ if (!$any_posts_found):
                             </div>
                             <div class="post-card__content">
                                 <h3 class="post-card__title">
-                                    <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                                    <a href="<?php echo esc_url(get_permalink($latest_post->ID)); ?>"><?php echo esc_html($latest_post->post_title); ?></a>
                                 </h3>
                                 <div class="post-card__meta">
-                                    <?php echo saligny_icon('calendar'); ?> <?php echo get_the_date(); ?>
+                                    <?php echo saligny_icon('calendar'); ?> <?php echo get_the_date('M j, Y', $latest_post->ID); ?>
                                 </div>
-                                <p class="post-card__excerpt"><?php echo wp_trim_words(get_the_content(), 25); ?></p>
+                                <p class="post-card__excerpt"><?php echo wp_trim_words(get_the_excerpt(), 25); ?></p>
                             </div>
                         </article>
                     <?php

@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function syncTopBarHeight() {
         if (!siteHeader || !topBar) return;
+        // Only needed on desktop where the top-bar is visible and animated.
+        if (window.innerWidth <= MOBILE_BREAKPOINT) return;
         siteHeader.style.setProperty('--top-bar-height', topBar.scrollHeight + 'px');
     }
 
@@ -212,5 +214,51 @@ document.addEventListener('DOMContentLoaded', function () {
             animatedEls[i].style.transition = 'opacity 0.6s ease, transform 0.6s ease';
             observer.observe(animatedEls[i]);
         }
+    }
+
+    // -------------------------------------------------------
+    // Share bar: copy link button
+    // -------------------------------------------------------
+    var copyBtn = document.querySelector('.share-btn--copy[data-copy-url]');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', function () {
+            var url = this.getAttribute('data-copy-url');
+            var btn = this;
+
+            function markCopied() {
+                btn.classList.add('copied');
+                btn.title = 'Link copiat!';
+                setTimeout(function () {
+                    btn.classList.remove('copied');
+                    btn.title = 'Copiază linkul';
+                }, 2000);
+            }
+
+            // Prefer the modern Clipboard API (requires HTTPS).
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(url).then(markCopied).catch(function () {
+                    fallbackCopy(url, markCopied);
+                });
+            } else {
+                fallbackCopy(url, markCopied);
+            }
+        });
+    }
+
+    function fallbackCopy(text, callback) {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        try {
+            document.execCommand('copy');
+            if (callback) callback();
+        } catch (e) {
+            // Silently fail if neither API is available.
+        }
+        document.body.removeChild(ta);
     }
 });

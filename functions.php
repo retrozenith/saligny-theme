@@ -713,6 +713,11 @@ function saligny_ensure_primary_menu_integrity()
         return;
     }
 
+    // Throttle expensive DB work to at most once every 6 hours.
+    if (get_transient('saligny_menu_integrity_done')) {
+        return;
+    }
+
     // 1) Ensure required pages exist.
     $required_pages = saligny_nav_required_pages();
     foreach ($required_pages as $title => $content) {
@@ -811,6 +816,10 @@ function saligny_ensure_primary_menu_integrity()
 
     // 5) Always keep "Pagina principală" as first top-level item.
     saligny_force_home_first_in_menu($menu_id);
+
+    // Record timestamp and set transient so we don't repeat within 6 hours.
+    update_option('saligny_nav_health_last_check', time());
+    set_transient('saligny_menu_integrity_done', 1, 6 * HOUR_IN_SECONDS);
 }
 
 function saligny_force_home_first_in_menu($menu_id)
@@ -882,12 +891,11 @@ function saligny_nav_health_check()
         return;
     }
 
-    // Run health check on every admin page load (light check, caches result)
-    static $check_done = false;
-    if ($check_done) {
+    // Guard: only run if the 6-hour transient is absent (set inside
+    // saligny_ensure_primary_menu_integrity after a successful run).
+    if (get_transient('saligny_menu_integrity_done')) {
         return;
     }
-    $check_done = true;
 
     saligny_ensure_primary_menu_integrity();
 }
@@ -980,11 +988,15 @@ function saligny_render_theme_health_page()
         $action = sanitize_text_field($_POST['saligny_action']);
 
         if ($action === 'recreate_menu') {
+            // Clear the transient so the full integrity check runs immediately.
+            delete_transient('saligny_menu_integrity_done');
             saligny_ensure_primary_menu_integrity();
             $action_message = '<div class="notice notice-success is-dismissible"><p>✓ Meniu recreat cu succes!</p></div>';
         } elseif ($action === 'run_health_check') {
+            // Force a fresh run by clearing both the transient and the cached option.
+            delete_transient('saligny_menu_integrity_done');
             delete_option('saligny_nav_health_last_check');
-            saligny_nav_health_check();
+            saligny_ensure_primary_menu_integrity();
             $action_message = '<div class="notice notice-success is-dismissible"><p>✓ Health check rulat!</p></div>';
         } elseif ($action === 'flush_permalinks') {
             flush_rewrite_rules();

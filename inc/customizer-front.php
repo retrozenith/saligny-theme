@@ -24,7 +24,7 @@ function saligny_frontpage_customizer_register($wp_customize)
     ));
 
     $wp_customize->add_setting('front_hero_badge', array(
-        'default' => 'Din 1959',
+        'default' => 'Din 1966',
         'sanitize_callback' => 'sanitize_text_field',
     ));
     $wp_customize->add_control('front_hero_badge', array(

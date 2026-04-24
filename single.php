@@ -48,7 +48,7 @@ get_header();
                         <a href="mailto:?subject=<?php echo rawurlencode(get_the_title() . ' | ' . $inst_name); ?>&body=<?php echo rawurlencode(get_the_title() . ' | ' . $inst_name . "\n" . get_permalink()); ?>" class="share-btn share-btn--email" title="Trimite prin Email">
                             <?php echo saligny_icon('email', '1.2rem'); ?>
                         </a>
-                        <button class="share-btn share-btn--copy" onclick="navigator.clipboard.writeText('<?php echo esc_url(get_permalink()); ?>').then(function(){var b=document.querySelector('.share-btn--copy');b.classList.add('copied');b.title='Link copiat!';setTimeout(function(){b.classList.remove('copied');b.title='Copiază linkul';},2000)})" title="Copiază linkul">
+                        <button class="share-btn share-btn--copy" data-copy-url="<?php echo esc_url(get_permalink()); ?>" title="Copiază linkul">
                             <svg style="width:1.2rem;height:1.2rem;fill:currentColor;" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
                         </button>
                     </div>
